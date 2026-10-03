@@ -15,7 +15,6 @@
     touch-action: manipulation;
   }
   body { display: flex; justify-content: center; align-items: center; }
-
   #game {
     width: 100%;
     max-width: 480px;
@@ -23,149 +22,191 @@
     height: 100dvh;
     max-height: 900px;
     position: relative;
-    background: linear-gradient(180deg, #7EC8E3 0%, #A9D9EC 40%, #5DADE2 55%, #1B4F72 100%);
     overflow: hidden;
     box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    transition: background 2s ease;
   }
 
-  /* СОЛНЦЕ */
+  /* ===== ПОГОДНЫЕ СЛОИ ===== */
+  #sky {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: background 2s ease;
+  }
+  #sky.day    { background: linear-gradient(180deg, #7EC8E3 0%, #A9D9EC 38%, #5DADE2 50%, #1B4F72 100%); }
+  #sky.evening{ background: linear-gradient(180deg, #FDB99B 0%, #CF8BF3 35%, #5B4B8A 60%, #1B1F3A 100%); }
+  #sky.night  { background: linear-gradient(180deg, #0B1A2E 0%, #1B2A4A 40%, #0F1A30 60%, #05080F 100%); }
+
+  /* Луна ночью */
+  #moon {
+    position: absolute;
+    top: 30px; right: 40px;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FFFDE7, #E0E0E0 70%, #9E9E9E);
+    box-shadow: 0 0 30px rgba(255,253,231,0.7), 0 0 60px rgba(255,253,231,0.3);
+    opacity: 0;
+    transition: opacity 1.5s;
+    z-index: 1;
+  }
+  #moon.visible { opacity: 1; }
+
+  /* Солнце */
   .sun {
     position: absolute;
     top: 20px; right: 20px;
     width: 70px; height: 70px;
+    z-index: 1;
+    transition: opacity 1.5s;
   }
-  .sun svg {
-    width: 100%; height: 100%;
-    animation: sunPulse 4s ease-in-out infinite;
-  }
+  .sun.hidden { opacity: 0; }
+  .sun svg { width: 100%; height: 100%; animation: sunPulse 4s ease-in-out infinite; }
   @keyframes sunPulse {
     0%,100% { filter: drop-shadow(0 0 15px #FFD54F); }
     50% { filter: drop-shadow(0 0 28px #FFEB3B); }
   }
 
-  /* ОБЛАКА */
-  .cloud {
-    position: absolute;
-    opacity: 0.9;
-    animation: cloudMove 30s linear infinite;
-  }
-  .cloud.c1 { top: 50px; left: -100px; width: 90px; animation-duration: 40s; }
-  .cloud.c2 { top: 130px; left: -100px; width: 60px; animation-duration: 55s; animation-delay: -20s; }
+  /* Облака */
+  .cloud { position: absolute; opacity: 0.9; animation: cloudMove 40s linear infinite; z-index: 2; }
+  .cloud.c1 { top: 50px; left: -100px; width: 90px; animation-duration: 50s; }
+  .cloud.c2 { top: 130px; left: -100px; width: 60px; animation-duration: 65s; animation-delay: -20s; }
+  .cloud.c3 { top: 90px; left: -100px; width: 70px; animation-duration: 75s; animation-delay: -40s; }
   @keyframes cloudMove {
     0% { transform: translateX(0); }
     100% { transform: translateX(600px); }
   }
 
+  /* Дождь */
+  #rainLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    display: none;
+    overflow: hidden;
+  }
+  #rainLayer.active { display: block; }
+  .raindrop {
+    position: absolute;
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(180deg, transparent, rgba(174,214,241,0.7));
+    animation: rainFall linear infinite;
+  }
+  @keyframes rainFall {
+    0% { transform: translateY(-30px); }
+    100% { transform: translateY(110vh); }
+  }
+
   /* БЕРЕГ */
   .shore {
     position: absolute;
-    bottom: 42%;
+    bottom: 38%;
     left: 0; right: 0;
-    height: 60px;
-    background: linear-gradient(180deg, #8B6F47 0%, #6B5437 60%, #4A3A26 100%);
-    border-top: 4px solid #A08252;
-    z-index: 1;
-  }
-  .shore::after {
-    content: '';
-    position: absolute;
-    bottom: -8px; left: 0; right: 0;
-    height: 12px;
-    background: repeating-linear-gradient(90deg,
-      transparent 0px, transparent 25px,
-      rgba(255,255,255,0.25) 25px, rgba(255,255,255,0.25) 45px);
-    border-radius: 50%;
-    animation: wave 3s linear infinite;
-  }
-  @keyframes wave {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(45px); }
+    height: 70px;
+    background: linear-gradient(180deg, #A08252 0%, #8B6F47 30%, #6B5437 70%, #4A3A26 100%);
+    border-top: 4px solid #C4A570;
+    z-index: 3;
   }
 
   /* ВОДА */
   .water {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 42%;
+    height: 38%;
     background: linear-gradient(180deg, #2874A6 0%, #154360 100%);
-    z-index: 0;
+    z-index: 2;
+    overflow: hidden;
+    transition: background 2s ease;
+  }
+  #sky.night ~ .water { background: linear-gradient(180deg, #142D4C 0%, #08131F 100%); }
+  .water::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 14px;
+    background: repeating-linear-gradient(90deg,
+      transparent 0px, transparent 30px,
+      rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 55px);
+    border-radius: 50%;
+    animation: wave 4s linear infinite;
+  }
+  @keyframes wave {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(55px); }
   }
 
   /* РЫБАК */
   .fisher {
     position: absolute;
-    bottom: calc(42% + 30px);
-    left: 50%;
+    bottom: calc(38% + 42px);
+    left: 28%;
     transform: translateX(-50%);
-    width: 90px;
+    width: 80px;
     height: 100px;
-    z-index: 3;
+    z-index: 5;
     transition: transform 0.15s;
   }
-  .fisher svg {
-    width: 100%; height: 100%;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
-  }
-  .fisher.casting { transform: translateX(-50%) rotate(-4deg); }
+  .fisher svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35)); }
+  .fisher.casting { transform: translateX(-50%) rotate(-3deg); }
+  .fisher.casting2 { transform: translateX(-50%) rotate(5deg); }
 
-  /* ЛЕСКА */
-  #line {
+  /* КАНВАС ЛЕСКИ */
+  #lineCanvas {
     position: absolute;
-    width: 2px;
-    background: rgba(255,255,255,0.85);
-    transform-origin: top center;
-    transition: height 0.15s linear;
-    z-index: 5;
-    display: none;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
   }
 
   /* ПОПЛАВОК */
   #bobber {
     position: absolute;
-    width: 16px;
-    height: 34px;
-    transform: translate(-50%, 0);
-    z-index: 6;
+    width: 18px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    z-index: 7;
     display: none;
   }
-  #bobber svg {
-    width: 100%; height: 100%;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
-  }
-  #bobber.biting svg {
-    animation: bobberBite 0.25s ease-in-out infinite;
-  }
+  #bobber svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+  #bobber.glow svg { filter: drop-shadow(0 0 10px #FFEB3B) drop-shadow(0 0 20px #FFEB3B); }
+  #bobber.biting svg { animation: bobberBite 0.3s ease-in-out infinite; }
   @keyframes bobberBite {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(7px); }
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(8px) rotate(3deg); }
+  }
+
+  /* РЫБЫ */
+  .swimming-fish {
+    position: absolute;
+    width: 50px;
+    height: 38px;
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+    will-change: transform;
+  }
+  .swimming-fish.active { opacity: 1; }
+  .swimming-fish.hooked { animation: fishHooked 0.3s ease-out forwards; }
+  @keyframes fishHooked {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4) rotate(-15deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .swimming-fish.reeling {
+    animation: reel 0.7s ease-out forwards;
+  }
+  @keyframes reel {
+    0% { transform: scale(1) rotate(0); opacity: 1; }
+    100% { transform: scale(0.6) rotate(-45deg) translateY(-300px); opacity: 0; }
   }
 </style>
 </head>
 <body>
 <div id="game">
  <style>
-  /* РЫБА */
-  .fish {
-    position: absolute;
-    width: 60px;
-    height: 44px;
-    transition: opacity 0.4s;
-    pointer-events: none;
-    z-index: 4;
-    animation: fishSwim 2s ease-in-out infinite;
-  }
-  @keyframes fishSwim {
-    0%,100% { transform: translateX(0); }
-    50% { transform: translateX(-8px); }
-  }
-  .fish.reeling {
-    animation: reel 0.7s ease-out forwards;
-  }
-  @keyframes reel {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-60px, -280px) rotate(-40deg); opacity: 0; }
-  }
-
   /* HUD */
   #hud {
     position: absolute;
@@ -173,24 +214,41 @@
     padding: 12px;
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
     z-index: 20;
   }
   .hud-item {
     background: rgba(0,0,0,0.4);
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     border: 1px solid rgba(255,255,255,0.15);
     color: white;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
   }
-  .hud-item svg { width: 20px; height: 20px; }
+  .hud-item svg { width: 18px; height: 18px; }
+  #weatherIcon {
+    background: rgba(0,0,0,0.4);
+    padding: 6px 10px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 20;
+  }
+  #weatherIcon svg { width: 18px; height: 18px; }
+  #weatherIcon .label { display: none; }
+  @media (min-width: 400px) { #weatherIcon .label { display: inline; } }
 
   /* КНОПКА ДЕЙСТВИЯ */
   #actionBtn {
@@ -218,23 +276,24 @@
     transform: translateX(-50%) translateY(3px);
     box-shadow: 0 2px 0 #A04000, 0 4px 10px rgba(0,0,0,0.4);
   }
-  #actionBtn:disabled {
-    background: #7F8C8D;
-    box-shadow: 0 5px 0 #566573;
-    cursor: not-allowed;
-  }
+  #actionBtn:disabled { background: #7F8C8D; box-shadow: 0 5px 0 #566573; cursor: not-allowed; }
   #actionBtn.hidden { display: none; }
+  #actionBtn.urgent { animation: urgentPulse 0.5s ease-in-out infinite; }
+  @keyframes urgentPulse {
+    0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 5px 0 #A04000, 0 8px 20px rgba(255,0,0,0.4); }
+    50% { transform: translateX(-50%) scale(1.05); box-shadow: 0 5px 0 #A04000, 0 8px 30px rgba(255,100,0,0.8); }
+  }
 
-  /* УВЕДОМЛЕНИЕ */
+  /* УВЕДОМЛЕНИЕ О РЫБЕ */
   #catch {
     position: absolute;
-    top: 42%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     background: rgba(255,255,255,0.97);
-    padding: 14px 26px;
+    padding: 14px 24px;
     border-radius: 18px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: #E67E22;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -244,9 +303,12 @@
     align-items: center;
     gap: 10px;
     white-space: nowrap;
+    flex-direction: column;
   }
   #catch.show { transform: translate(-50%, -50%) scale(1); }
-  #catch svg { width: 38px; height: 28px; flex-shrink: 0; }
+  #catch svg { width: 42px; height: 32px; }
+  #catch .catch-name { font-size: 15px; color: #2C3E50; }
+  #catch .catch-weight { font-size: 12px; color: #7F8C8D; font-weight: normal; }
 
   /* ШКАЛА НАТЯЖЕНИЯ */
   #tensionBar {
@@ -288,14 +350,64 @@
     display: none;
     transform: translate(-50%, -50%);
   }
-  #splash.active {
-    display: block;
-    animation: splash 0.7s ease-out forwards;
-  }
+  #splash.active { display: block; animation: splash 0.7s ease-out forwards; }
   @keyframes splash {
     0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
   }
+
+  /* TOAST */
+  .toast {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-weight: bold;
+    font-size: 14px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    border: 2px solid #FFD700;
+    white-space: nowrap;
+    max-width: 90%;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ДОСТИЖЕНИЕ */
+  .achievement-popup {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+    color: #2C3E50;
+    padding: 12px 20px;
+    border-radius: 16px;
+    font-weight: bold;
+    font-size: 14px;
+    z-index: 250;
+    box-shadow: 0 8px 30px rgba(255,215,0,0.6);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 3px solid #FFF;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    pointer-events: none;
+    max-width: 90%;
+  }
+  .achievement-popup.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .achievement-popup svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .achievement-popup .ach-title { font-size: 11px; opacity: 0.8; }
+  .achievement-popup .ach-name { font-size: 15px; }
  </style>
  <style>
   /* ЭКРАНЫ */
@@ -307,28 +419,28 @@
     flex-direction: column;
     background: linear-gradient(180deg, #1B4F72 0%, #0a1929 100%);
     color: white;
-    padding: calc(20px + env(safe-area-inset-top, 0px)) 20px calc(20px + env(safe-area-inset-bottom, 0px));
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
   }
   .screen.show { display: flex; }
   .screen-title {
-    font-size: 34px;
+    font-size: 32px;
     text-align: center;
     font-weight: 900;
     letter-spacing: 3px;
     color: #FFD700;
     text-shadow: 0 3px 0 #B8860B, 0 6px 20px rgba(0,0,0,0.6);
-    margin: 20px 0;
+    margin: 16px 0;
   }
   .screen-sub {
     text-align: center;
-    font-size: 16px;
+    font-size: 15px;
     opacity: 0.8;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .menu-btn {
-    padding: 16px 30px;
-    font-size: 18px;
+    padding: 14px 28px;
+    font-size: 17px;
     font-weight: bold;
     border: none;
     border-radius: 16px;
@@ -337,66 +449,66 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     font-family: inherit;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     transition: transform 0.1s;
     box-shadow: 0 5px 0 rgba(0,0,0,0.4);
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
     align-self: center;
   }
-  .menu-btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 rgba(0,0,0,0.4);
-  }
-  .menu-btn.play {
-    background: linear-gradient(180deg, #2ECC71, #27AE60);
-    box-shadow: 0 5px 0 #1E8449;
-  }
-  .menu-btn.shop {
-    background: linear-gradient(180deg, #F39C12, #E67E22);
-    box-shadow: 0 5px 0 #A04000;
-  }
-  .menu-btn.back {
-    background: linear-gradient(180deg, #7F8C8D, #566573);
-    box-shadow: 0 5px 0 #2C3E50;
+  .menu-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+  .menu-btn.play { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 5px 0 #1E8449; }
+  .menu-btn.shop { background: linear-gradient(180deg, #F39C12, #E67E22); box-shadow: 0 5px 0 #A04000; }
+  .menu-btn.back { background: linear-gradient(180deg, #7F8C8D, #566573); box-shadow: 0 5px 0 #2C3E50; }
+  .menu-btn.encycl { background: linear-gradient(180deg, #9B59B6, #8E44AD); box-shadow: 0 5px 0 #633974; }
+  .menu-btn.achiev { background: linear-gradient(180deg, #3498DB, #2980B9); box-shadow: 0 5px 0 #1A5276; }
+  .menu-btn.small {
+    width: auto;
+    padding: 10px 18px;
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 1px;
   }
 
-  /* МАГАЗИН */
-  .shop-header {
+  /* ШАПКА */
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
+    gap: 8px;
   }
   .coins {
     background: rgba(255,215,0,0.15);
     border: 2px solid #FFD700;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     color: #FFD700;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
   }
-  .coins svg { width: 22px; height: 22px; }
+  .coins svg { width: 20px; height: 20px; }
+
+  /* ТАБЫ */
   .tabs {
     display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 4px;
+    margin-bottom: 12px;
     background: rgba(0,0,0,0.3);
     padding: 4px;
     border-radius: 12px;
   }
   .tab {
     flex: 1;
-    padding: 10px 4px;
+    padding: 9px 3px;
     border: none;
     background: transparent;
     color: white;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
     border-radius: 8px;
     cursor: pointer;
     font-family: inherit;
@@ -408,29 +520,29 @@
     opacity: 1;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
-  .shop-list {
+
+  /* СПИСКИ */
+  .list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding-bottom: 20px;
+    gap: 8px;
+    padding-bottom: 16px;
   }
-  .shop-item {
+  .list-item {
     background: rgba(255,255,255,0.08);
     border: 2px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-    padding: 12px;
+    border-radius: 12px;
+    padding: 10px 12px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     transition: all 0.2s;
   }
-  .shop-item.owned {
-    border-color: #FFD700;
-    background: rgba(255,215,0,0.08);
-  }
+  .list-item.owned { border-color: #FFD700; background: rgba(255,215,0,0.08); }
+  .list-item.locked { opacity: 0.45; filter: grayscale(0.7); }
+
   .item-icon {
-    width: 50px;
-    height: 50px;
+    width: 46px; height: 46px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -438,24 +550,16 @@
     background: rgba(0,0,0,0.3);
     border-radius: 10px;
   }
-  .item-icon svg { width: 42px; height: 42px; }
+  .item-icon svg { width: 38px; height: 38px; }
   .item-info { flex: 1; min-width: 0; }
-  .item-name {
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 3px;
-  }
-  .item-desc {
-    font-size: 12px;
-    opacity: 0.7;
-    line-height: 1.3;
-  }
+  .item-name { font-weight: bold; font-size: 14px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+  .item-desc { font-size: 11px; opacity: 0.7; line-height: 1.3; }
   .item-btn {
-    padding: 8px 14px;
+    padding: 7px 12px;
     border: none;
-    border-radius: 10px;
+    border-radius: 9px;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
     color: white;
     cursor: pointer;
     font-family: inherit;
@@ -463,193 +567,209 @@
     transition: transform 0.1s;
     flex-shrink: 0;
   }
-  .item-btn.buy {
-    background: linear-gradient(180deg, #2ECC71, #27AE60);
-    box-shadow: 0 3px 0 #1E8449;
-  }
-  .item-btn.equip {
-    background: linear-gradient(180deg, #3498DB, #2980B9);
-    box-shadow: 0 3px 0 #1A5276;
-  }
-  .item-btn.equipped {
-    background: #566573;
-    cursor: default;
-    box-shadow: none;
-  }
+  .item-btn.buy { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 3px 0 #1E8449; }
+  .item-btn.equip { background: linear-gradient(180deg, #3498DB, #2980B9); box-shadow: 0 3px 0 #1A5276; }
+  .item-btn.equipped { background: #566573; cursor: default; box-shadow: none; }
   .item-btn:active:not(.equipped) { transform: translateY(2px); }
   .item-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ГЕЙМ ОВЕР */
-  #gameover .screen-title {
-    color: #E74C3C;
-    text-shadow: 0 3px 0 #922B21;
+  /* РЕДКОСТЬ */
+  .rarity-common    { color: #95A5A6; }
+  .rarity-uncommon  { color: #2ECC71; }
+  .rarity-rare      { color: #3498DB; }
+  .rarity-epic      { color: #9B59B6; }
+  .rarity-legendary { color: #F39C12; }
+  .rarity-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.15);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
+
+  /* ГЕЙМ ОВЕР */
   .stat-row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 14px;
+    padding: 9px 13px;
     background: rgba(255,255,255,0.08);
     border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 15px;
+    margin-bottom: 6px;
+    font-size: 14px;
   }
-  .stat-row span:last-child {
-    font-weight: bold;
-    color: #FFD700;
+  .stat-row span:last-child { font-weight: bold; color: #FFD700; }
+
+  /* ИЗНОС УДОЧКИ */
+  .durability-bar {
+    height: 6px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
   }
-  .toast {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: rgba(0,0,0,0.85);
-    color: white;
-    padding: 12px 22px;
-    border-radius: 24px;
-    font-weight: bold;
-    font-size: 15px;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s;
-    border: 2px solid #FFD700;
-    white-space: nowrap;
+  .durability-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #E74C3C 0%, #F39C12 30%, #2ECC71 100%);
+    transition: width 0.3s;
   }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-</style>
-</head>
+  .durability-fill.warning { background: linear-gradient(90deg, #E74C3C, #C0392B); }
+ </style>
+ </head>
 <body>
 <div id="game">
- <!-- ФОН -->
-<div class="sun">
-  <svg viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="24" fill="#FFD54F"/>
-    <circle cx="50" cy="50" r="24" fill="none" stroke="#FFB300" stroke-width="2"/>
-    <g stroke="#FFD54F" stroke-width="4" stroke-linecap="round">
-      <line x1="50" y1="10" x2="50" y2="20"/>
-      <line x1="50" y1="80" x2="50" y2="90"/>
-      <line x1="10" y1="50" x2="20" y2="50"/>
-      <line x1="80" y1="50" x2="90" y2="50"/>
-      <line x1="22" y1="22" x2="29" y2="29"/>
-      <line x1="71" y1="71" x2="78" y2="78"/>
-      <line x1="78" y1="22" x2="71" y2="29"/>
-      <line x1="29" y1="71" x2="22" y2="78"/>
-    </g>
-  </svg>
-</div>
+  <div id="sky" class="day"></div>
+  <div id="moon"></div>
 
-<div class="cloud c1">
-  <svg viewBox="0 0 100 40">
-    <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff"/>
-    <ellipse cx="55" cy="20" rx="22" ry="16" fill="#fff"/>
-    <ellipse cx="75" cy="27" rx="20" ry="12" fill="#fff"/>
-  </svg>
-</div>
-<div class="cloud c2">
-  <svg viewBox="0 0 100 40">
-    <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff" opacity="0.85"/>
-    <ellipse cx="55" cy="20" rx="22" ry="16" fill="#fff" opacity="0.85"/>
-    <ellipse cx="75" cy="27" rx="20" ry="12" fill="#fff" opacity="0.85"/>
-  </svg>
-</div>
-
-<div class="water"></div>
-<div class="shore"></div>
-
-<!-- РЫБАК -->
-<div class="fisher" id="fisher">
-  <svg viewBox="0 0 90 100">
-    <line x1="58" y1="45" x2="82" y2="5" stroke="#5D3A1A" stroke-width="3.5" stroke-linecap="round"/>
-    <line x1="82" y1="5" x2="85" y2="2" stroke="#2C1810" stroke-width="2" stroke-linecap="round"/>
-    <rect x="36" y="78" width="6" height="18" rx="3" fill="#34495E"/>
-    <rect x="48" y="78" width="6" height="18" rx="3" fill="#34495E"/>
-    <ellipse cx="39" cy="96" rx="6" ry="3" fill="#1C2833"/>
-    <ellipse cx="51" cy="96" rx="6" ry="3" fill="#1C2833"/>
-    <path d="M32 50 Q32 40 45 40 Q58 40 58 50 L58 80 Q58 84 54 84 L36 84 Q32 84 32 80 Z" fill="#E67E22"/>
-    <path d="M32 50 Q32 40 45 40 Q58 40 58 50 L58 80 Q58 84 54 84 L36 84 Q32 84 32 80 Z" fill="none" stroke="#A04000" stroke-width="1.5"/>
-    <rect x="36" y="58" width="8" height="9" rx="1.5" fill="#A04000"/>
-    <rect x="46" y="58" width="8" height="9" rx="1.5" fill="#A04000"/>
-    <path d="M33 52 Q25 60 28 72" stroke="#F5CBA7" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M57 52 Q65 50 62 45" stroke="#F5CBA7" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <circle cx="45" cy="28" r="15" fill="#F5CBA7"/>
-    <ellipse cx="45" cy="18" rx="24" ry="5" fill="#6B4226"/>
-    <path d="M32 18 Q32 4 45 4 Q58 4 58 18 Z" fill="#8B5A2B"/>
-    <path d="M32 18 Q32 4 45 4 Q58 4 58 18 Z" fill="none" stroke="#4A2C17" stroke-width="1.2"/>
-    <ellipse cx="45" cy="18" rx="24" ry="5" fill="none" stroke="#4A2C17" stroke-width="1.2"/>
-    <circle cx="40" cy="28" r="1.8" fill="#2C3E50"/>
-    <circle cx="50" cy="28" r="1.8" fill="#2C3E50"/>
-    <path d="M40 34 Q45 37 50 34" stroke="#2C3E50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <circle cx="60" cy="44" r="4" fill="#F5CBA7"/>
-  </svg>
-</div>
-
-<!-- HUD -->
-<div id="hud">
-  <div class="hud-item">
-    <svg viewBox="0 0 40 30">
-      <path d="M5 15 Q15 3 30 15 Q15 27 5 15 Z" fill="#4FC3F7" stroke="#0277BD" stroke-width="1.5"/>
-      <path d="M30 15 L38 8 L38 22 Z" fill="#4FC3F7" stroke="#0277BD" stroke-width="1.5"/>
-      <circle cx="14" cy="13" r="2" fill="#0D47A1"/>
+  <!-- СОЛНЦЕ -->
+  <div class="sun" id="sunEl">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="24" fill="#FFD54F"/>
+      <circle cx="50" cy="50" r="24" fill="none" stroke="#FFB300" stroke-width="2"/>
+      <g stroke="#FFD54F" stroke-width="4" stroke-linecap="round">
+        <line x1="50" y1="10" x2="50" y2="20"/>
+        <line x1="50" y1="80" x2="50" y2="90"/>
+        <line x1="10" y1="50" x2="20" y2="50"/>
+        <line x1="80" y1="50" x2="90" y2="50"/>
+        <line x1="22" y1="22" x2="29" y2="29"/>
+        <line x1="71" y1="71" x2="78" y2="78"/>
+        <line x1="78" y1="22" x2="71" y2="29"/>
+        <line x1="29" y1="71" x2="22" y2="78"/>
+      </g>
     </svg>
-    <span id="scoreText">0</span>
   </div>
-  <div class="hud-item">
-    <svg viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="9" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
-      <text x="12" y="17" font-size="11" font-weight="bold" fill="#8B6914" text-anchor="middle" font-family="Arial">₽</text>
+
+  <!-- ОБЛАКА -->
+  <div class="cloud c1">
+    <svg viewBox="0 0 100 40">
+      <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff"/>
+      <ellipse cx="55" cy="20" rx="22" ry="16" fill="#fff"/>
+      <ellipse cx="75" cy="27" rx="20" ry="12" fill="#fff"/>
     </svg>
-    <span id="coinsText">0</span>
   </div>
-  <div class="hud-item">
-    <svg viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="11" fill="none" stroke="#fff" stroke-width="2.5"/>
-      <line x1="15" y1="15" x2="15" y2="9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="15" y1="15" x2="20" y2="17" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <div class="cloud c2">
+    <svg viewBox="0 0 100 40">
+      <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff" opacity="0.85"/>
+      <ellipse cx="55" cy="20" rx="22" ry="16" fill="#fff" opacity="0.85"/>
+      <ellipse cx="75" cy="27" rx="20" ry="12" fill="#fff" opacity="0.85"/>
     </svg>
-    <span id="timeText">60</span>
   </div>
-</div>
+  <div class="cloud c3">
+    <svg viewBox="0 0 100 40">
+      <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff" opacity="0.7"/>
+      <ellipse cx="55" cy="20" rx="22" ry="16" fill="#fff" opacity="0.7"/>
+      <ellipse cx="75" cy="27" rx="20" ry="12" fill="#fff" opacity="0.7"/>
+    </svg>
+  </div>
 
-<!-- ЛЕСКА И ПОПЛАВОК -->
-<div id="line"></div>
-<div id="bobber">
-  <svg viewBox="0 0 16 34">
-    <line x1="8" y1="0" x2="8" y2="8" stroke="#FFEB3B" stroke-width="2"/>
-    <path d="M3 15 A5 7 0 0 1 13 15 L13 20 L3 20 Z" fill="#E74C3C"/>
-    <path d="M3 20 L13 20 L13 24 A5 7 0 0 1 3 24 Z" fill="#FFFFFF"/>
-    <line x1="8" y1="27" x2="8" y2="34" stroke="#333" stroke-width="2"/>
-    <circle cx="8" cy="20" r="5" fill="none" stroke="#333" stroke-width="1.2" opacity="0.5"/>
-  </svg>
-</div>
+  <div class="water"></div>
+  <div class="shore"></div>
 
-<!-- ВСПЛЕСК -->
-<div id="splash">
-  <svg viewBox="0 0 100 60" width="110">
-    <ellipse cx="50" cy="45" rx="42" ry="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.9"/>
-    <ellipse cx="50" cy="45" rx="26" ry="6" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
-    <circle cx="22" cy="25" r="4" fill="#fff" opacity="0.9"/>
-    <circle cx="78" cy="22" r="5" fill="#fff" opacity="0.9"/>
-    <circle cx="50" cy="12" r="3.5" fill="#fff" opacity="0.85"/>
-  </svg>
-</div>
+  <!-- ДОЖДЬ -->
+  <div id="rainLayer"></div>
 
-<!-- ШКАЛА НАТЯЖЕНИЯ -->
-<div id="tensionBar">
-  <div id="perfectZone"></div>
-  <div id="tensionFill"></div>
-</div>
+  <!-- РЫБАК -->
+  <div class="fisher" id="fisher">
+    <svg viewBox="0 0 80 100">
+      <ellipse cx="40" cy="96" rx="22" ry="4" fill="rgba(0,0,0,0.3)"/>
+      <rect x="32" y="76" width="6" height="18" rx="2" fill="#34495E"/>
+      <rect x="42" y="76" width="6" height="18" rx="2" fill="#34495E"/>
+      <ellipse cx="35" cy="95" rx="6" ry="3" fill="#1C2833"/>
+      <ellipse cx="45" cy="95" rx="6" ry="3" fill="#1C2833"/>
+      <path d="M28 48 Q28 38 40 38 Q52 38 52 48 L52 78 Q52 82 48 82 L32 82 Q28 82 28 78 Z" fill="#E67E22"/>
+      <path d="M28 48 Q28 38 40 38 Q52 38 52 48 L52 78 Q52 82 48 82 L32 82 Q28 82 28 78 Z" fill="none" stroke="#A04000" stroke-width="1.5"/>
+      <rect x="32" y="55" width="7" height="9" rx="1.5" fill="#A04000"/>
+      <rect x="41" y="55" width="7" height="9" rx="1.5" fill="#A04000"/>
+      <path d="M30 50 Q25 58 30 68" stroke="#F5CBA7" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M50 50 Q56 46 55 40" stroke="#F5CBA7" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="26" r="14" fill="#F5CBA7"/>
+      <ellipse cx="40" cy="16" rx="22" ry="5" fill="#6B4226"/>
+      <path d="M28 16 Q28 4 40 4 Q52 4 52 16 Z" fill="#8B5A2B"/>
+      <path d="M28 16 Q28 4 40 4 Q52 4 52 16 Z" fill="none" stroke="#4A2C17" stroke-width="1.2"/>
+      <ellipse cx="40" cy="16" rx="22" ry="5" fill="none" stroke="#4A2C17" stroke-width="1.2"/>
+      <circle cx="36" cy="26" r="1.6" fill="#2C3E50"/>
+      <circle cx="46" cy="26" r="1.6" fill="#2C3E50"/>
+      <path d="M36 32 Q40 35 44 32" stroke="#2C3E50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="30" y1="68" x2="72" y2="18" stroke="#8B5A2B" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="30" y1="68" x2="72" y2="18" stroke="#5D3A1A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <line x1="72" y1="18" x2="78" y2="10" stroke="#2C1810" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="34" cy="62" r="4" fill="#7F8C8D" stroke="#34495E" stroke-width="1.2"/>
+      <circle cx="34" cy="62" r="1.8" fill="#34495E"/>
+    </svg>
+  </div>
 
-<button id="actionBtn">Забросить</button>
-<div id="catch"></div>
-<div class="toast" id="toast"></div>
-  <!-- ГЛАВНОЕ МЕНЮ -->
+  <canvas id="lineCanvas"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-item">
+      <svg viewBox="0 0 40 30">
+        <path d="M5 15 Q15 3 30 15 Q15 27 5 15 Z" fill="#4FC3F7" stroke="#0277BD" stroke-width="1.5"/>
+        <path d="M30 15 L38 8 L38 22 Z" fill="#4FC3F7" stroke="#0277BD" stroke-width="1.5"/>
+        <circle cx="14" cy="13" r="2" fill="#0D47A1"/>
+      </svg>
+      <span id="scoreText">0</span>
+    </div>
+    <div class="hud-item">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
+        <text x="12" y="17" font-size="11" font-weight="bold" fill="#8B6914" text-anchor="middle" font-family="Arial">₽</text>
+      </svg>
+      <span id="coinsText">0</span>
+    </div>
+    <div class="hud-item">
+      <svg viewBox="0 0 30 30">
+        <circle cx="15" cy="15" r="11" fill="none" stroke="#fff" stroke-width="2.5"/>
+        <line x1="15" y1="15" x2="15" y2="9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="15" y1="15" x2="20" y2="17" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span id="timeText">60</span>
+    </div>
+    <div id="weatherIcon">
+      <svg id="weatherSvg" viewBox="0 0 24 24"></svg>
+      <span class="label" id="weatherLabel">Ясно</span>
+    </div>
+  </div>
+
+  <!-- ПОПЛАВОК -->
+  <div id="bobber">
+    <svg viewBox="0 0 18 40">
+      <line x1="9" y1="0" x2="9" y2="10" stroke="#FFEB3B" stroke-width="2.5"/>
+      <circle cx="9" cy="1" r="2" fill="#F44336"/>
+      <path d="M3 17 A6 8 0 0 1 15 17 L15 22 L3 22 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="1"/>
+      <path d="M3 22 L15 22 L15 27 A6 8 0 0 1 3 27 Z" fill="#FFFFFF" stroke="#C0392B" stroke-width="1"/>
+      <line x1="9" y1="31" x2="9" y2="40" stroke="#34495E" stroke-width="2.5"/>
+    </svg>
+  </div>
+
+  <!-- ВСПЛЕСК -->
+  <div id="splash">
+    <svg viewBox="0 0 100 60" width="110">
+      <ellipse cx="50" cy="45" rx="42" ry="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.9"/>
+      <ellipse cx="50" cy="45" rx="26" ry="6" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
+      <circle cx="22" cy="25" r="4" fill="#fff" opacity="0.9"/>
+      <circle cx="78" cy="22" r="5" fill="#fff" opacity="0.9"/>
+      <circle cx="50" cy="12" r="3.5" fill="#fff" opacity="0.85"/>
+    </svg>
+  </div>
+
+  <!-- ШКАЛА НАТЯЖЕНИЯ -->
+  <div id="tensionBar">
+    <div id="perfectZone"></div>
+    <div id="tensionFill"></div>
+  </div>
+
+  <button id="actionBtn">Забросить</button>
+  <div id="catch"></div>
+  <div class="toast" id="toast"></div>
+  <div class="achievement-popup" id="achPopup"></div>
+    <!-- ГЛАВНОЕ МЕНЮ -->
   <div class="screen show" id="mainMenu">
     <div class="screen-title">РЫБАЛКА</div>
     <div class="screen-sub">Поймай как можно больше рыбы за 60 секунд</div>
-    <div class="coins" style="align-self:center;margin-bottom:24px;">
+    <div class="coins" style="align-self:center;margin-bottom:20px;">
       <svg viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="9" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
         <text x="12" y="17" font-size="11" font-weight="bold" fill="#8B6914" text-anchor="middle" font-family="Arial">₽</text>
@@ -658,6 +778,8 @@
     </div>
     <button class="menu-btn play" id="playBtn">Играть</button>
     <button class="menu-btn shop" id="shopBtn">Магазин</button>
+    <button class="menu-btn encycl" id="encyclBtn">Энциклопедия</button>
+    <button class="menu-btn achiev" id="achievBtn">Достижения</button>
     <div style="flex:1"></div>
     <div style="text-align:center;opacity:0.5;font-size:13px;">
       Рекорд: <span id="menuBest">0</span> рыб
@@ -666,8 +788,8 @@
 
   <!-- МАГАЗИН -->
   <div class="screen" id="shopScreen">
-    <div class="shop-header">
-      <button class="menu-btn back" style="width:auto;padding:10px 20px;margin:0;font-size:14px;" id="shopBackBtn">Назад</button>
+    <div class="header">
+      <button class="menu-btn back small" id="shopBackBtn">Назад</button>
       <div class="coins">
         <svg viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="9" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
@@ -681,72 +803,80 @@
       <button class="tab" data-tab="baits">Наживка</button>
       <button class="tab" data-tab="gear">Снасти</button>
     </div>
-    <div class="shop-list" id="shopList"></div>
+    <div class="list" id="shopList"></div>
+  </div>
+
+  <!-- ЭНЦИКЛОПЕДИЯ -->
+  <div class="screen" id="encyclScreen">
+    <div class="header">
+      <button class="menu-btn back small" id="encyclBackBtn">Назад</button>
+      <div class="coins">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" fill="#9B59B6" stroke="#633974" stroke-width="1.5"/>
+          <text x="12" y="17" font-size="12" font-weight="bold" fill="#FFF" text-anchor="middle" font-family="Arial">?</text>
+        </svg>
+        <span id="encyclCount">0/6</span>
+      </div>
+    </div>
+    <div class="screen-title" style="font-size:24px;margin:8px 0;">Энциклопедия</div>
+    <div class="list" id="encyclList"></div>
+  </div>
+
+  <!-- ДОСТИЖЕНИЯ -->
+  <div class="screen" id="achievScreen">
+    <div class="header">
+      <button class="menu-btn back small" id="achievBackBtn">Назад</button>
+      <div class="coins">
+        <svg viewBox="0 0 24 24" fill="#3498DB" stroke="#1A5276" stroke-width="1.5">
+          <path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z"/>
+        </svg>
+        <span id="achievCount">0/10</span>
+      </div>
+    </div>
+    <div class="screen-title" style="font-size:24px;margin:8px 0;">Достижения</div>
+    <div class="list" id="achievList"></div>
   </div>
 
   <!-- КОНЕЦ ИГРЫ -->
   <div class="screen" id="gameover">
-    <div class="screen-title">Время вышло</div>
-    <div style="font-size:20px;text-align:center;margin-bottom:20px;">
-      Поймано рыб: <b id="finalScore" style="color:#FFD700;font-size:28px;">0</b>
+    <div class="screen-title" style="color:#E74C3C;text-shadow:0 3px 0 #922B21;">Время вышло</div>
+    <div style="font-size:18px;text-align:center;margin-bottom:14px;">
+      Поймано рыб: <b id="finalScore" style="color:#FFD700;font-size:26px;">0</b>
     </div>
-    <div style="font-size:17px;text-align:center;margin-bottom:20px;color:#FFD700;font-weight:bold;" id="rewardLine"></div>
-    <div class="stat-row"><span>Очков набрано</span><span id="statPoints">0</span></div>
+    <div style="font-size:15px;text-align:center;margin-bottom:16px;color:#FFD700;font-weight:bold;" id="rewardLine"></div>
+    <div class="stat-row"><span>Очков</span><span id="statPoints">0</span></div>
     <div class="stat-row"><span>Упущено</span><span id="statMissed">0</span></div>
     <div class="stat-row"><span>Ботинков</span><span id="statBoots">0</span></div>
+    <div class="stat-row"><span>Самый крупный улов</span><span id="statBiggest">—</span></div>
     <div class="stat-row"><span>Рекорд</span><span id="statBest">0</span></div>
     <div style="flex:1"></div>
     <button class="menu-btn play" id="restartBtn">Играть снова</button>
     <button class="menu-btn back" id="menuBtn">В меню</button>
   </div>
-</div>
-
-<script>
-// ==================== SVG ИКОНКИ ====================
+         </div>
+         <script>
+// ==================== SVG ИКОНКИ РЫБ ====================
 function fishSVG(type, size = 60) {
   const svgs = {
-    perch: `<svg viewBox="0 0 60 44" width="${size}">
-      <path d="M5 22 Q22 4 42 22 Q22 40 5 22 Z" fill="#7CB342" stroke="#33691E" stroke-width="1.5"/>
-      <path d="M42 22 L56 12 L56 32 Z" fill="#7CB342" stroke="#33691E" stroke-width="1.5"/>
-      <path d="M15 15 L20 29 M22 12 L27 32 M29 12 L34 32" stroke="#33691E" stroke-width="1.5" fill="none"/>
-      <circle cx="14" cy="19" r="2.5" fill="#1B5E20"/>
-      <circle cx="14" cy="19" r="1" fill="#000"/>
-    </svg>`,
-    carp: `<svg viewBox="0 0 60 44" width="${size}">
-      <path d="M5 22 Q22 6 42 22 Q22 38 5 22 Z" fill="#FFB300" stroke="#E65100" stroke-width="1.5"/>
-      <path d="M42 22 L56 10 L58 22 L56 34 Z" fill="#FF8F00" stroke="#E65100" stroke-width="1.5"/>
-      <circle cx="14" cy="19" r="2.8" fill="#FFF"/>
-      <circle cx="14" cy="19" r="1.5" fill="#000"/>
-      <path d="M10 26 Q14 29 18 26" stroke="#E65100" stroke-width="1.2" fill="none"/>
-    </svg>`,
-    ruffe: `<svg viewBox="0 0 60 44" width="${size}">
-      <path d="M5 22 Q22 8 42 22 Q22 36 5 22 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/>
-      <path d="M42 22 L56 12 L56 32 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/>
-      <path d="M12 8 L16 14 M20 6 L23 13 M28 6 L30 13 M36 8 L37 14" stroke="#3E2723" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <circle cx="14" cy="19" r="2.5" fill="#FFEB3B"/>
-      <circle cx="14" cy="19" r="1.3" fill="#000"/>
-    </svg>`,
-    pike: `<svg viewBox="0 0 70 44" width="${size}">
-      <path d="M5 22 Q25 6 50 20 L58 18 L54 22 L58 26 L50 24 Q25 38 5 22 Z" fill="#558B2F" stroke="#1B5E20" stroke-width="1.5"/>
-      <path d="M50 20 L68 10 L66 22 L68 34 L50 24 Z" fill="#33691E" stroke="#1B5E20" stroke-width="1.5"/>
-      <path d="M15 18 L18 26 M22 15 L25 29 M29 14 L32 30" stroke="#1B5E20" stroke-width="1.2" fill="none"/>
-      <circle cx="13" cy="19" r="3" fill="#F44336"/>
-      <circle cx="13" cy="19" r="1.5" fill="#000"/>
-    </svg>`,
-    catfish: `<svg viewBox="0 0 80 50" width="${size + 10}">
-      <path d="M8 25 Q30 5 55 25 Q30 45 8 25 Z" fill="#455A64" stroke="#1A237E" stroke-width="1.8"/>
-      <path d="M55 25 L74 12 L74 38 Z" fill="#37474F" stroke="#1A237E" stroke-width="1.8"/>
-      <circle cx="18" cy="22" r="3.2" fill="#FFF"/>
-      <circle cx="18" cy="22" r="1.7" fill="#000"/>
-      <path d="M8 25 Q2 22 -2 24 M8 25 Q2 28 -2 26" stroke="#1A237E" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </svg>`,
-    boot: `<svg viewBox="0 0 60 50" width="${size}">
-      <path d="M15 8 L15 30 Q15 38 8 40 L55 40 Q52 34 45 32 L40 30 L40 8 Z" fill="#5D4037" stroke="#3E2723" stroke-width="2"/>
-      <path d="M15 8 L40 8" stroke="#3E2723" stroke-width="2"/>
-      <path d="M15 35 L55 35" stroke="#3E2723" stroke-width="1.5"/>
-    </svg>`
+    perch: `<svg viewBox="0 0 60 44" width="${size}"><path d="M5 22 Q22 4 42 22 Q22 40 5 22 Z" fill="#7CB342" stroke="#33691E" stroke-width="1.5"/><path d="M42 22 L56 12 L56 32 Z" fill="#7CB342" stroke="#33691E" stroke-width="1.5"/><path d="M15 15 L20 29 M22 12 L27 32 M29 12 L34 32" stroke="#33691E" stroke-width="1.5" fill="none"/><circle cx="14" cy="19" r="2.5" fill="#1B5E20"/><circle cx="14" cy="19" r="1" fill="#000"/></svg>`,
+    carp: `<svg viewBox="0 0 60 44" width="${size}"><path d="M5 22 Q22 6 42 22 Q22 38 5 22 Z" fill="#FFB300" stroke="#E65100" stroke-width="1.5"/><path d="M42 22 L56 10 L58 22 L56 34 Z" fill="#FF8F00" stroke="#E65100" stroke-width="1.5"/><circle cx="14" cy="19" r="2.8" fill="#FFF"/><circle cx="14" cy="19" r="1.5" fill="#000"/><path d="M10 26 Q14 29 18 26" stroke="#E65100" stroke-width="1.2" fill="none"/></svg>`,
+    ruffe: `<svg viewBox="0 0 60 44" width="${size}"><path d="M5 22 Q22 8 42 22 Q22 36 5 22 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/><path d="M42 22 L56 12 L56 32 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/><path d="M12 8 L16 14 M20 6 L23 13 M28 6 L30 13 M36 8 L37 14" stroke="#3E2723" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="14" cy="19" r="2.5" fill="#FFEB3B"/><circle cx="14" cy="19" r="1.3" fill="#000"/></svg>`,
+    pike: `<svg viewBox="0 0 70 44" width="${size}"><path d="M5 22 Q25 6 50 20 L58 18 L54 22 L58 26 L50 24 Q25 38 5 22 Z" fill="#558B2F" stroke="#1B5E20" stroke-width="1.5"/><path d="M50 20 L68 10 L66 22 L68 34 L50 24 Z" fill="#33691E" stroke="#1B5E20" stroke-width="1.5"/><path d="M15 18 L18 26 M22 15 L25 29 M29 14 L32 30" stroke="#1B5E20" stroke-width="1.2" fill="none"/><circle cx="13" cy="19" r="3" fill="#F44336"/><circle cx="13" cy="19" r="1.5" fill="#000"/></svg>`,
+    catfish: `<svg viewBox="0 0 80 50" width="${size + 10}"><path d="M8 25 Q30 5 55 25 Q30 45 8 25 Z" fill="#455A64" stroke="#1A237E" stroke-width="1.8"/><path d="M55 25 L74 12 L74 38 Z" fill="#37474F" stroke="#1A237E" stroke-width="1.8"/><circle cx="18" cy="22" r="3.2" fill="#FFF"/><circle cx="18" cy="22" r="1.7" fill="#000"/><path d="M8 25 Q2 22 -2 24 M8 25 Q2 28 -2 26" stroke="#1A237E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    boot: `<svg viewBox="0 0 60 50" width="${size}"><path d="M15 8 L15 30 Q15 38 8 40 L55 40 Q52 34 45 32 L40 30 L40 8 Z" fill="#5D4037" stroke="#3E2723" stroke-width="2"/><path d="M15 8 L40 8" stroke="#3E2723" stroke-width="2"/><path d="M15 35 L55 35" stroke="#3E2723" stroke-width="1.5"/></svg>`
   };
   return svgs[type] || svgs.perch;
+}
+
+// Иконки погоды
+function weatherSVG(type) {
+  const svgs = {
+    clear: `<circle cx="12" cy="12" r="5" fill="#FFD54F"/><g stroke="#FFD54F" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></g>`,
+    cloudy: `<path d="M7 18 Q3 18 3 14 Q3 11 6 11 Q7 7 11 7 Q14 7 15 10 Q19 10 19 14 Q19 18 15 18 Z" fill="#B0BEC5"/>`,
+    rain: `<path d="M7 15 Q3 15 3 12 Q3 9 6 9 Q7 5 11 5 Q14 5 15 8 Q19 8 19 12 Q19 15 15 15 Z" fill="#78909C"/><line x1="8" y1="18" x2="7" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="18" x2="11" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="18" x2="15" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/>`,
+    storm: `<path d="M7 15 Q3 15 3 12 Q3 9 6 9 Q7 5 11 5 Q14 5 15 8 Q19 8 19 12 Q19 15 15 15 Z" fill="#546E7A"/><path d="M13 16 L10 20 L12 20 L10 24 L14 20 L12 20 Z" fill="#FFEB3B"/>`
+  };
+  return svgs[type] || svgs.clear;
 }
 
 // ==================== ЗВУКИ ====================
@@ -774,121 +904,192 @@ function playTone(freq, duration, type = 'sine', volume = 0.15, slideTo = null) 
   osc.stop(audioCtx.currentTime + duration);
 }
 
+function playNoise(duration, volume = 0.1, filterFreq = 1000) {
+  if (muted || !audioCtx) return;
+  const bufferSize = audioCtx.sampleRate * duration;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = filterFreq;
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+  source.start();
+  source.stop(audioCtx.currentTime + duration);
+}
+
 const sounds = {
-  cast: () => playTone(600, 0.2, 'sine', 0.12, 200),
-  bite: () => { playTone(800, 0.1, 'square', 0.1); setTimeout(() => playTone(1000, 0.1, 'square', 0.1), 100); },
-  hook: () => playTone(400, 0.15, 'triangle', 0.2, 900),
-  catch: () => { playTone(523, 0.1, 'sine', 0.15); setTimeout(() => playTone(659, 0.1, 'sine', 0.15), 100); setTimeout(() => playTone(784, 0.2, 'sine', 0.15), 200); },
-  miss: () => playTone(300, 0.3, 'sawtooth', 0.1, 100),
-  reel: () => playTone(200, 0.4, 'sawtooth', 0.08, 500),
-  coin: () => { playTone(1200, 0.08, 'sine', 0.15); setTimeout(() => playTone(1600, 0.12, 'sine', 0.15), 80); },
-  gameover: () => { playTone(400, 0.2, 'sine', 0.15); setTimeout(() => playTone(300, 0.2, 'sine', 0.15), 200); setTimeout(() => playTone(200, 0.4, 'sine', 0.15), 400); }
+  cast:       () => playTone(600, 0.25, 'sine', 0.1, 150),
+  splash:     () => playNoise(0.4, 0.15, 800),
+  biteSoft:   () => { playTone(500, 0.08, 'sine', 0.08); setTimeout(() => playTone(600, 0.08, 'sine', 0.08), 80); },
+  biteSharp:  () => { playTone(900, 0.06, 'square', 0.12); setTimeout(() => playTone(1100, 0.06, 'square', 0.12), 60); },
+  biteFalse:  () => playTone(300, 0.15, 'sawtooth', 0.08, 200),
+  hook:       () => playTone(400, 0.15, 'triangle', 0.2, 900),
+  catch:      () => { playTone(523, 0.1, 'sine', 0.15); setTimeout(() => playTone(659, 0.1, 'sine', 0.15), 100); setTimeout(() => playTone(784, 0.2, 'sine', 0.15), 200); },
+  bigCatch:   () => { playTone(523, 0.12, 'sine', 0.18); setTimeout(() => playTone(659, 0.12, 'sine', 0.18), 120); setTimeout(() => playTone(784, 0.12, 'sine', 0.18), 240); setTimeout(() => playTone(1046, 0.3, 'sine', 0.2), 360); },
+  miss:       () => playTone(300, 0.3, 'sawtooth', 0.1, 100),
+  reel:       () => playTone(200, 0.4, 'sawtooth', 0.08, 500),
+  rodBreak:   () => { playNoise(0.3, 0.25, 2000); playTone(200, 0.4, 'sawtooth', 0.15, 60); },
+  coin:       () => { playTone(1200, 0.08, 'sine', 0.15); setTimeout(() => playTone(1600, 0.12, 'sine', 0.15), 80); },
+  achievement:() => { playTone(784, 0.15, 'sine', 0.2); setTimeout(() => playTone(1046, 0.15, 'sine', 0.2), 150); setTimeout(() => playTone(1318, 0.35, 'sine', 0.2), 300); },
+  gameover:   () => { playTone(400, 0.2, 'sine', 0.15); setTimeout(() => playTone(300, 0.2, 'sine', 0.15), 200); setTimeout(() => playTone(200, 0.4, 'sine', 0.15), 400); },
+  thunder:    () => { playNoise(1.2, 0.3, 300); }
 };
 
-// ==================== МАГАЗИН ДАННЫЕ ====================
+// ==================== БАЗА РЫБ ====================
+const BASE_FISH = [
+  { key: 'perch',   name: 'Окунь',         points: 1,  chance: 40, difficulty: 1,   biteMin: 2000, biteMax: 4000, rarity: 'common',    minKg: 0.1,  maxKg: 0.8,  nightBonus: 0.5, rainBonus: 0.3,  pricePerKg: 15 },
+  { key: 'carp',    name: 'Карась',        points: 2,  chance: 25, difficulty: 1.5, biteMin: 2200, biteMax: 4200, rarity: 'common',    minKg: 0.3,  maxKg: 1.5,  nightBonus: 0.8, rainBonus: 0.5,  pricePerKg: 20 },
+  { key: 'ruffe',   name: 'Ёрш',           points: 3,  chance: 15, difficulty: 2,   biteMin: 2400, biteMax: 4500, rarity: 'uncommon',  minKg: 0.05, maxKg: 0.3,  nightBonus: 1.2, rainBonus: 0.8,  pricePerKg: 25 },
+  { key: 'pike',    name: 'Щука',          points: 5,  chance: 12, difficulty: 2.5, biteMin: 2600, biteMax: 4800, rarity: 'rare',      minKg: 1,    maxKg: 8,    nightBonus: 0.6, rainBonus: 1.0,  pricePerKg: 40 },
+  { key: 'catfish', name: 'Сом-гигант',    points: 10, chance: 5,  difficulty: 3,   biteMin: 3000, biteMax: 5500, rarity: 'epic',      minKg: 5,    maxKg: 30,   nightBonus: 1.5, rainBonus: 1.2,  pricePerKg: 60 },
+  { key: 'sturgeon',name: 'Осётр',         points: 20, chance: 2,  difficulty: 4,   biteMin: 3500, biteMax: 6000, rarity: 'legendary', minKg: 10,   maxKg: 50,   nightBonus: 0.8, rainBonus: 1.5,  pricePerKg: 120 },
+  { key: 'boot',    name: 'Старый ботинок',points: 0,  chance: 3,  difficulty: 1,   biteMin: 1500, biteMax: 3000, rarity: 'common',    minKg: 0.3,  maxKg: 0.6,  nightBonus: 1,   rainBonus: 1,    pricePerKg: 1 }
+];
+
+// ==================== МАГАЗИН ====================
 const SHOP_ITEMS = {
   rods: [
-    { id: 'rod_basic',  name: 'Бамбуковая удочка', desc: 'Стандартная. Без бонусов', price: 0,    bonus: 0 },
-    { id: 'rod_fiber',  name: 'Стеклопластик',     desc: 'Больше монет. +15%',        price: 100,  bonus: 0.15 },
-    { id: 'rod_carbon', name: 'Карбоновая',        desc: 'Профессионал. +35%',        price: 350,  bonus: 0.35 },
-    { id: 'rod_gold',   name: 'Золотая удочка',    desc: 'Легенда! +70% монет',       price: 1000, bonus: 0.70 }
+    { id: 'rod_basic',   name: 'Бамбуковая',    desc: 'Простая. Прочность 100%',   price: 0,    bonus: 0,    maxWeight: 5,  durability: 100 },
+    { id: 'rod_fiber',   name: 'Стеклопластик', desc: 'Держит до 10 кг. +15% монет', price: 100,  bonus: 0.15, maxWeight: 10, durability: 100 },
+    { id: 'rod_carbon',  name: 'Карбоновая',    desc: 'Держит до 25 кг. +35% монет', price: 350,  bonus: 0.35, maxWeight: 25, durability: 100 },
+    { id: 'rod_gold',    name: 'Золотая удочка',desc: 'Держит всё. +70% монет',     price: 1000, bonus: 0.70, maxWeight: 100,durability: 100 }
   ],
   baits: [
-    { id: 'bait_worm',   name: 'Червь',            desc: 'Обычная наживка',           price: 0,   effect: 'none',     value: 0 },
-    { id: 'bait_maggot', name: 'Опарыш',           desc: 'Мелочь клюёт чаще',         price: 80,  effect: 'small',    value: 0.3 },
-    { id: 'bait_lure',   name: 'Блесна',           desc: 'Хищник клюёт чаще',         price: 250, effect: 'predator', value: 0.3 },
-    { id: 'bait_golden', name: 'Золотая приманка', desc: 'Редкая рыба! +50% очков',   price: 600, effect: 'rare',     value: 0.5 }
+    { id: 'bait_worm',   name: 'Червь',            desc: 'Обычная наживка',        price: 0,   effect: 'none',     value: 0 },
+    { id: 'bait_maggot', name: 'Опарыш',           desc: 'Мелочь клюёт чаще',      price: 80,  effect: 'small',    value: 0.3 },
+    { id: 'bait_lure',   name: 'Блесна',           desc: 'Хищник клюёт чаще',      price: 250, effect: 'predator', value: 0.3 },
+    { id: 'bait_golden', name: 'Золотая приманка', desc: 'Редкая рыба! +50% очков',price: 600, effect: 'rare',     value: 0.5 }
   ],
   gear: [
-    { id: 'gear_none',   name: 'Без снастей',   desc: 'Обычное время игры',      price: 0,   bonus: 0 },
-    { id: 'gear_basket', name: 'Сак',           desc: '+15 секунд к таймеру',    price: 150, bonus: 15 },
-    { id: 'gear_sonar',  name: 'Эхолот',        desc: 'Шире зона подсечки',      price: 400, bonus: 0.5 },
-    { id: 'gear_both',   name: 'Полный набор',  desc: '+20 сек и широкая зона',  price: 900, bonus: 'both' }
+    { id: 'gear_none',   name: 'Без снастей', desc: 'Обычное время игры',      price: 0,   bonus: 0 },
+    { id: 'gear_basket', name: 'Сак',         desc: '+15 секунд к таймеру',    price: 150, bonus: 15 },
+    { id: 'gear_sonar',  name: 'Эхолот',      desc: 'Шире зона подсечки',      price: 400, bonus: 0.5 },
+    { id: 'gear_both',   name: 'Полный набор',desc: '+20 сек и широкая зона',  price: 900, bonus: 'both' }
   ]
 };
 
+// ==================== ДОСТИЖЕНИЯ ====================
+const ACHIEVEMENTS = [
+  { id: 'first',      name: 'Первая рыбка',       desc: 'Поймай свою первую рыбу',           check: s => s.totalCaught >= 1 },
+  { id: 'ten',        name: 'Рыбак-новичок',      desc: 'Поймай 10 рыб всего',               check: s => s.totalCaught >= 10 },
+  { id: 'hundred',    name: 'Опытный рыбак',      desc: 'Поймай 100 рыб всего',              check: s => s.totalCaught >= 100 },
+  { id: 'catfish',    name: 'Сомовья охота',      desc: 'Поймай сома',                       check: s => s.caught.catfish >= 1 },
+  { id: 'sturgeon',   name: 'Царская рыба',       desc: 'Поймай осетра',                     check: s => s.caught.sturgeon >= 1 },
+  { id: 'big',        name: 'Крупная рыба',       desc: 'Поймай рыбу весом 10 кг+',          check: s => s.biggest >= 10 },
+  { id: 'rich',       name: 'Богач',              desc: 'Накопи 1000 монет',                 check: s => save.coins >= 1000 },
+  { id: 'record',     name: 'Рекордсмен',         desc: 'Набери 100+ очков за игру',         check: s => save.best >= 100 },
+  { id: 'night',      name: 'Ночной охотник',     desc: 'Поймай 5 рыб ночью за раз',         check: s => s.nightCatches >= 5 },
+  { id: 'perfect',    name: 'Снайпер',            desc: 'Поймай 10 рыб без промаха за раз',  check: s => s.perfectStreak >= 10 }
+];
+
 // ==================== СОХРАНЕНИЕ ====================
-const SAVE_KEY = 'fishing_save_v2';
-let save = loadSave();
+const SAVE_KEY = 'fishing_save_v4';
+
+function defaultSave() {
+  return {
+    coins: 0,
+    best: 0,
+    totalCaught: 0,
+    biggest: 0,
+    caught: {},
+    owned: { rods: ['rod_basic'], baits: ['bait_worm'], gear: ['gear_none'] },
+    equipped: { rods: 'rod_basic', baits: 'bait_worm', gear: 'gear_none' },
+    durability: { rod_basic: 100 },
+    unlockedAch: []
+  };
+}
 
 function loadSave() {
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
-    return {
-      coins: s.coins || 0,
-      best: s.best || 0,
-      owned: s.owned || { rods: ['rod_basic'], baits: ['bait_worm'], gear: ['gear_none'] },
-      equipped: s.equipped || { rods: 'rod_basic', baits: 'bait_worm', gear: 'gear_none' }
-    };
-  } catch(e) {
-    return {
-      coins: 0, best: 0,
-      owned: { rods: ['rod_basic'], baits: ['bait_worm'], gear: ['gear_none'] },
-      equipped: { rods: 'rod_basic', baits: 'bait_worm', gear: 'gear_none' }
-    };
-  }
+    const d = defaultSave();
+    return { ...d, ...s, owned: { ...d.owned, ...(s.owned || {}) }, equipped: { ...d.equipped, ...(s.equipped || {}) }, durability: { ...d.durability, ...(s.durability || {}) } };
+  } catch(e) { return defaultSave(); }
 }
+
+let save = loadSave();
 
 function persistSave() {
   localStorage.setItem(SAVE_KEY, JSON.stringify(save));
 }
-         </script>
-         <script>
+ </script>
+ <script>
 // ==================== DOM ====================
 const $ = id => document.getElementById(id);
 const gameEl = $('game');
+const skyEl = $('sky');
+const moonEl = $('moon');
+const sunEl = $('sunEl');
 const actionBtn = $('actionBtn');
-const lineEl = $('line');
 const bobberEl = $('bobber');
 const fisherEl = $('fisher');
+const lineCanvas = $('lineCanvas');
+const ctx = lineCanvas.getContext('2d');
 const scoreTextEl = $('scoreText');
 const timeTextEl = $('timeText');
 const coinsTextEl = $('coinsText');
+const weatherSvg = $('weatherSvg');
+const weatherLabel = $('weatherLabel');
 const catchEl = $('catch');
-const gameoverEl = $('gameover');
-const finalScoreEl = $('finalScore');
-const rewardLineEl = $('rewardLine');
-const restartBtn = $('restartBtn');
 const tensionBar = $('tensionBar');
 const tensionFill = $('tensionFill');
 const perfectZoneEl = $('perfectZone');
 const splashEl = $('splash');
-const statPointsEl = $('statPoints');
-const statMissedEl = $('statMissed');
-const statBootsEl = $('statBoots');
-const statBestEl = $('statBest');
-const mainMenu = $('mainMenu');
-const shopScreen = $('shopScreen');
-const shopListEl = $('shopList');
-const menuCoinsEl = $('menuCoins');
-const menuBestEl = $('menuBest');
-const shopCoinsEl = $('shopCoins');
 const toastEl = $('toast');
+const achPopupEl = $('achPopup');
+const rainLayer = $('rainLayer');
 
 // ==================== СОСТОЯНИЕ ====================
 let state = 'idle';
 let score = 0;
-let coinsEarned = 0;
 let timeLeft = 60;
-let gameDuration = 60;
 let timerInterval = null;
 let biteTimeout = null;
 let currentFish = null;
+let currentFishWeight = 0;
 let tension = 0;
 let tensionDirection = 1;
 let tensionInterval = null;
 let perfectZone = null;
-let stats = { points: 0, missed: 0, boots: 0 };
-let fishEl = null;
-let currentTab = 'rods';
+let swimmingFish = [];
+let animFrame = null;
+let lineStartPos = null;
+let bobberPos = null;
+let weather = { type: 'clear', label: 'Ясно' };
+let dayPhase = 'day';
+let sessionStats = { points: 0, missed: 0, boots: 0, biggest: 0, nightCatches: 0, perfectStreak: 0 };
+
+// ==================== КАНВАС ====================
+function resizeCanvas() {
+  lineCanvas.width = gameEl.clientWidth;
+  lineCanvas.height = gameEl.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 // ==================== ХЕЛПЕРЫ ====================
 function getEquipped() {
   return {
-    rod: SHOP_ITEMS.rods.find(r => r.id === save.equipped.rods) || SHOP_ITEMS.rods[0],
+    rod:  SHOP_ITEMS.rods.find(r => r.id === save.equipped.rods) || SHOP_ITEMS.rods[0],
     bait: SHOP_ITEMS.baits.find(b => b.id === save.equipped.baits) || SHOP_ITEMS.baits[0],
-    gear: SHOP_ITEMS.gear.find(g => g.id === save.equipped.gear) || SHOP_ITEMS.gear[0]
+    gear: SHOP_ITEMS.gears ? SHOP_ITEMS.gears.find(g => g.id === save.equipped.gears) : SHOP_ITEMS.gear.find(g => g.id === save.equipped.gear) || SHOP_ITEMS.gear[0]
   };
+}
+
+function getRodDurability() {
+  return save.durability[save.equipped.rods] ?? 100;
+}
+
+function setRodDurability(val) {
+  save.durability[save.equipped.rods] = Math.max(0, Math.min(100, val));
 }
 
 function updateHUD() {
@@ -898,15 +1099,16 @@ function updateHUD() {
 }
 
 function updateMenu() {
-  menuCoinsEl.textContent = save.coins;
-  menuBestEl.textContent = save.best;
-  shopCoinsEl.textContent = save.coins;
+  $('menuCoins').textContent = save.coins;
+  $('menuBest').textContent = save.best;
+  $('shopCoins').textContent = save.coins;
 }
 
 function showToast(msg) {
   toastEl.textContent = msg;
   toastEl.classList.add('show');
-  setTimeout(() => toastEl.classList.remove('show'), 1600);
+  clearTimeout(toastEl._t);
+  toastEl._t = setTimeout(() => toastEl.classList.remove('show'), 1800);
 }
 
 function showScreen(id) {
@@ -914,22 +1116,73 @@ function showScreen(id) {
   if (id) $(id).classList.add('show');
 }
 
-// ==================== РЫБА ====================
-const BASE_FISH = [
-  { key: 'perch',   name: 'Окунь',          points: 1,  chance: 40, difficulty: 1,   biteMin: 2000, biteMax: 4000 },
-  { key: 'carp',    name: 'Карась',         points: 2,  chance: 25, difficulty: 1.5, biteMin: 2200, biteMax: 4200 },
-  { key: 'ruffe',   name: 'Ёрш',            points: 3,  chance: 15, difficulty: 2,   biteMin: 2400, biteMax: 4500 },
-  { key: 'pike',    name: 'Щука',           points: 5,  chance: 12, difficulty: 2.5, biteMin: 2600, biteMax: 4800 },
-  { key: 'catfish', name: 'Сом-гигант',     points: 10, chance: 5,  difficulty: 3,   biteMin: 3000, biteMax: 5500 },
-  { key: 'boot',    name: 'Старый ботинок', points: -1, chance: 3,  difficulty: 1,   biteMin: 2000, biteMax: 3500 }
-];
+// ==================== ВРЕМЯ СУТОК И ПОГОДА ====================
+function pickWeather() {
+  const r = Math.random();
+  if (r < 0.5) { weather = { type: 'clear', label: 'Ясно' }; }
+  else if (r < 0.75) { weather = { type: 'cloudy', label: 'Облачно' }; }
+  else if (r < 0.93) { weather = { type: 'rain', label: 'Дождь' }; }
+  else { weather = { type: 'storm', label: 'Гроза' }; }
+  weatherSvg.innerHTML = weatherSVG(weather.type);
+  weatherLabel.textContent = weather.label;
+  updateRainEffect();
+}
 
+function updateRainEffect() {
+  if (weather.type === 'rain' || weather.type === 'storm') {
+    rainLayer.classList.add('active');
+    rainLayer.innerHTML = '';
+    const count = weather.type === 'storm' ? 60 : 35;
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('div');
+      d.className = 'raindrop';
+      d.style.left = Math.random() * 100 + '%';
+      d.style.animationDuration = (0.5 + Math.random() * 0.5) + 's';
+      d.style.animationDelay = (Math.random() * 2) + 's';
+      d.style.opacity = 0.4 + Math.random() * 0.5;
+      rainLayer.appendChild(d);
+    }
+    if (weather.type === 'storm' && !muted) sounds.thunder();
+  } else {
+    rainLayer.classList.remove('active');
+    rainLayer.innerHTML = '';
+  }
+}
+
+function applyTimeOfDay() {
+  skyEl.className = dayPhase;
+  if (dayPhase === 'night') {
+    moonEl.classList.add('visible');
+    sunEl.classList.add('hidden');
+    bobberEl.classList.add('glow');
+  } else if (dayPhase === 'evening') {
+    moonEl.classList.remove('visible');
+    sunEl.classList.remove('hidden');
+    bobberEl.classList.remove('glow');
+  } else {
+    moonEl.classList.remove('visible');
+    sunEl.classList.remove('hidden');
+    bobberEl.classList.remove('glow');
+  }
+}
+
+function pickTimeOfDay() {
+  const r = Math.random();
+  if (r < 0.55) dayPhase = 'day';
+  else if (r < 0.8) dayPhase = 'evening';
+  else dayPhase = 'night';
+  applyTimeOfDay();
+}
+
+// ==================== ВЫБОР РЫБЫ ====================
 function pickFish() {
   const bait = getEquipped().bait;
   const weighted = BASE_FISH.map(f => {
     let w = f.chance;
+    if (weather.type === 'rain' || weather.type === 'storm') w *= 1 + (f.rainBonus || 0);
+    if (dayPhase === 'night') w *= 1 + (f.nightBonus || 0);
     if (bait.effect === 'small' && (f.key === 'perch' || f.key === 'carp' || f.key === 'ruffe')) w *= 1 + bait.value;
-    if (bait.effect === 'predator' && (f.key === 'pike' || f.key === 'catfish')) w *= 1 + bait.value;
+    if (bait.effect === 'predator' && (f.key === 'pike' || f.key === 'catfish' || f.key === 'sturgeon')) w *= 1 + bait.value;
     if (bait.effect === 'rare' && f.points >= 3 && f.key !== 'boot') w *= 1 + bait.value;
     if (f.key === 'boot' && bait.effect === 'rare') w *= 0.3;
     return { ...f, w };
@@ -943,344 +1196,129 @@ function pickFish() {
   return weighted[0];
 }
 
-// ==================== ИГРА ====================
-function startGame() {
-  const gear = getEquipped().gear;
-  let duration = 60;
-  if (gear.bonus === 15) duration += 15;
-  if (gear.bonus === 'both') duration += 20;
-  gameDuration = duration;
-  timeLeft = duration;
-  score = 0;
-  coinsEarned = 0;
-  stats = { points: 0, missed: 0, boots: 0 };
-  updateHUD();
-  showScreen(null);
-  actionBtn.classList.remove('hidden');
-  resetRod();
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateHUD();
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      endGame();
-    }
-  }, 1000);
+function rollWeight(fish) {
+  const t = Math.random();
+  const skewed = Math.pow(t, 2);
+  return (fish.minKg + (fish.maxKg - fish.minKg) * skewed).toFixed(2);
 }
 
-function cast() {
-  if (state !== 'idle') return;
-  state = 'casting';
-  actionBtn.disabled = true;
-  initAudio();
-  sounds.cast();
-  fisherEl.classList.add('casting');
-  setTimeout(() => fisherEl.classList.remove('casting'), 250);
+// ==================== ПЛАВАЮЩИЕ РЫБЫ ====================
+const MAX_SWIMMING = 6;
 
+function createSwimmingFish() {
+  const gameRect = gameEl.getBoundingClientRect();
+  const waterTop = gameRect.height * 0.62;
+  const waterBottom = gameRect.height - 20;
+  const el = document.createElement('div');
+  el.className = 'swimming-fish';
+  const fish = pickFish();
+  el.innerHTML = fishSVG(fish.key, 50);
+  el.dataset.fishKey = fish.key;
+  const y = waterTop + Math.random() * (waterBottom - waterTop);
+  const x = Math.random() * (gameRect.width - 60);
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  gameEl.appendChild(el);
+  const dir = Math.random() < 0.5 ? 1 : -1;
+  const speed = 0.15 + Math.random() * 0.35;
+  const obj = {
+    el,
+    x, y,
+    dir,
+    speed,
+    targetX: dir > 0 ? gameRect.width + 60 : -60,
+    alive: true,
+    key: fish.key
+  };
+  el.style.transform = `scaleX(${dir})`;
+  swimmingFish.push(obj);
+  setTimeout(() => el.classList.add('active'), 50);
+  return obj;
+}
+
+function removeSwimmingFish(obj) {
+  obj.alive = false;
+  if (obj.el.parentNode) obj.el.parentNode.removeChild(obj.el);
+  swimmingFish = swimmingFish.filter(f => f !== obj);
+}
+
+function updateSwimmingFish() {
+  const gameRect = gameEl.getBoundingClientRect();
+  for (const f of swimmingFish) {
+    if (!f.alive) continue;
+    f.x += f.dir * f.speed;
+    f.el.style.left = f.x + 'px';
+    if ((f.dir > 0 && f.x > gameRect.width + 60) || (f.dir < 0 && f.x < -60)) {
+      removeSwimmingFish(f);
+    }
+  }
+}
+
+function spawnSwimmingLoop() {
+  if (swimmingFish.length < MAX_SWIMMING && Math.random() < 0.03) {
+    createSwimmingFish();
+  }
+}
+
+function clearAllSwimming() {
+  swimmingFish.forEach(f => f.alive = false);
+  swimmingFish = [];
+}
+
+// ==================== ДУГА ЗАБРОСА ====================
+function getRodTip() {
   const gameRect = gameEl.getBoundingClientRect();
   const fisherRect = fisherEl.getBoundingClientRect();
-  const lineStartX = fisherRect.left - gameRect.left + fisherRect.width * 0.93;
-  const lineStartY = fisherRect.top - gameRect.top + fisherRect.height * 0.05;
-
-  const castDistance = 160 + Math.random() * 140;
-  const bobberX = lineStartX + 40 + Math.random() * 80;
-  const bobberY = lineStartY + castDistance;
-
-  lineEl.style.display = 'block';
-  lineEl.style.left = lineStartX + 'px';
-  lineEl.style.top = lineStartY + 'px';
-  lineEl.style.height = '0px';
-  setTimeout(() => { lineEl.style.height = castDistance + 'px'; }, 20);
-
-  bobberEl.style.display = 'block';
-  bobberEl.style.left = bobberX + 'px';
-  bobberEl.style.top = bobberY + 'px';
-
-  setTimeout(() => {
-    state = 'waiting';
-    actionBtn.textContent = 'Ждём...';
-    const waitTime = 800 + Math.random() * 3500;
-    biteTimeout = setTimeout(startBite, waitTime);
-  }, 350);
-}
-
-function startBite() {
-  if (state !== 'waiting') return;
-  state = 'biting';
-  currentFish = pickFish();
-  actionBtn.disabled = false;
-  actionBtn.textContent = 'ПОДСЕЧКА!';
-  sounds.bite();
-  bobberEl.classList.add('biting');
-  spawnFish(currentFish);
-
-  const biteWindow = currentFish.biteMin + Math.random() * (currentFish.biteMax - currentFish.biteMin);
-  biteTimeout = setTimeout(() => {
-    if (state === 'biting') {
-      bobberEl.classList.remove('biting');
-      stats.missed++;
-      state = 'idle';
-      actionBtn.disabled = false;
-      actionBtn.textContent = 'Забросить';
-      bobberEl.style.display = 'none';
-      lineEl.style.height = '0px';
-      lineEl.style.display = 'none';
-      showCatch('Упустил!', currentFish.key, '#E74C3C');
-      clearFish();
-    }
-  }, biteWindow);
-}
-
-function spawnFish(fish) {
-  clearFish();
-  fishEl = document.createElement('div');
-  fishEl.className = 'fish';
-  fishEl.innerHTML = fishSVG(fish.key, 60);
-  const bobberRect = bobberEl.getBoundingClientRect();
-  const gameRect = gameEl.getBoundingClientRect();
-  fishEl.style.left = (bobberRect.left - gameRect.left - 30) + 'px';
-  fishEl.style.top = (bobberRect.top - gameRect.top + 15) + 'px';
-  gameEl.appendChild(fishEl);
-}
-
-function clearFish() {
-  if (fishEl) { fishEl.remove(); fishEl = null; }
-}
-
-function hook() {
-  if (state !== 'biting') return;
-  state = 'fighting';
-  actionBtn.disabled = true;
-  actionBtn.textContent = 'Тяни!';
-  clearTimeout(biteTimeout);
-  clearFish();
-  bobberEl.classList.remove('biting');
-  sounds.hook();
-  showSplash();
-
-  tension = 0;
-  tensionDirection = 1;
-  const gear = getEquipped().gear;
-  let zoneWidth = 16 - currentFish.difficulty * 2.5;
-  if (gear.bonus === 0.5 || gear.bonus === 'both') zoneWidth *= 1.5;
-  perfectZone = { start: 50 - zoneWidth, end: 50 + zoneWidth };
-
-  tensionBar.style.display = 'block';
-  tensionFill.style.width = '0%';
-  perfectZoneEl.style.display = 'block';
-  perfectZoneEl.style.left = perfectZone.start + '%';
-  perfectZoneEl.style.width = (perfectZone.end - perfectZone.start) + '%';
-
-  const speed = 0.9 + currentFish.difficulty * 0.7;
-  tensionInterval = setInterval(() => {
-    tension += tensionDirection * speed;
-    if (tension >= 100) { tension = 100; tensionDirection = -1; }
-    if (tension <= 0) { tension = 0; tensionDirection = 1; }
-    tensionFill.style.width = tension + '%';
-  }, 20);
-
-  actionBtn.textContent = 'СТОП!';
-  actionBtn.disabled = false;
-  actionBtn.onclick = releaseTension;
-}
-
-function releaseTension() {
-  if (state !== 'fighting') return;
-  clearInterval(tensionInterval);
-  tensionBar.style.display = 'none';
-  perfectZoneEl.style.display = 'none';
-  actionBtn.onclick = mainAction;
-
-  const inZone = tension >= perfectZone.start && tension <= perfectZone.end;
-  const isBoot = currentFish.key === 'boot';
-  const bait = getEquipped().bait;
-
-  if (inZone) {
-    if (isBoot) {
-      stats.boots++;
-      score = Math.max(0, score - 1);
-      showCatch(`${currentFish.name}`, currentFish.key, '#E74C3C');
-      sounds.miss();
-    } else {
-      let points = currentFish.points;
-      if (bait.effect === 'rare') points = Math.ceil(points * (1 + bait.value));
-      score += points;
-      stats.points += points;
-      showCatch(`+${points} ${currentFish.name}!`, currentFish.key, '#27AE60');
-      sounds.catch();
-      animateReel();
-    }
-  } else {
-    stats.missed++;
-    showCatch('Сорвалась!', currentFish.key, '#E74C3C');
-    sounds.miss();
-  }
-
-  updateHUD();
-  setTimeout(resetRod, 600);
-}
-
-function animateReel() {
-  if (fishEl) {
-    fishEl.classList.add('reeling');
-    sounds.reel();
-  }
-}
-
-function resetRod() {
-  state = 'idle';
-  actionBtn.disabled = false;
-  actionBtn.textContent = 'Забросить';
-  bobberEl.style.display = 'none';
-  bobberEl.classList.remove('biting');
-  lineEl.style.display = 'none';
-  lineEl.style.height = '0px';
-  clearFish();
-  currentFish = null;
-}
-
-function mainAction() {
-  if (state === 'idle') cast();
-  else if (state === 'biting') hook();
-}
-
-actionBtn.onclick = mainAction;
-
-function showSplash() {
-  const bobberRect = bobberEl.getBoundingClientRect();
-  const gameRect = gameEl.getBoundingClientRect();
-  splashEl.style.left = (bobberRect.left - gameRect.left + bobberRect.width / 2) + 'px';
-  splashEl.style.top = (bobberRect.top - gameRect.top + 20) + 'px';
-  splashEl.classList.add('active');
-  setTimeout(() => splashEl.classList.remove('active'), 700);
-}
-
-function showCatch(text, fishKey, color) {
-  catchEl.innerHTML = fishSVG(fishKey, 40) + `<span>${text}</span>`;
-  catchEl.style.color = color || '#E67E22';
-  catchEl.classList.add('show');
-  setTimeout(() => catchEl.classList.remove('show'), 900);
-}
-
-function endGame() {
-  state = 'idle';
-  clearTimeout(biteTimeout);
-  clearInterval(tensionInterval);
-  tensionBar.style.display = 'none';
-  perfectZoneEl.style.display = 'none';
-  bobberEl.style.display = 'none';
-  lineEl.style.display = 'none';
-  actionBtn.classList.add('hidden');
-  clearFish();
-  sounds.gameover();
-
-  const rod = getEquipped().rod;
-  const multiplier = 1 + (rod.bonus || 0);
-  coinsEarned = Math.max(0, Math.round(score * 5 * multiplier));
-  save.coins += coinsEarned;
-
-  const isRecord = score > save.best;
-  if (isRecord) save.best = score;
-  persistSave();
-
-  finalScoreEl.textContent = score;
-  rewardLineEl.textContent = `+${coinsEarned} монет${isRecord && score > 0 ? '  •  Новый рекорд!' : ''}`;
-  statPointsEl.textContent = stats.points;
-  statMissedEl.textContent = stats.missed;
-  statBootsEl.textContent = stats.boots;
-  statBestEl.textContent = save.best;
-
-  if (coinsEarned > 0) setTimeout(() => sounds.coin(), 400);
-
-  showScreen('gameover');
-  updateMenu();
-}
-
-// ==================== МАГАЗИН UI ====================
-function renderShop() {
-  const items = SHOP_ITEMS[currentTab];
-  const ownedIds = save.owned[currentTab] || [];
-  const equippedId = save.equipped[currentTab];
-
-  shopListEl.innerHTML = items.map(item => {
-    const owned = ownedIds.includes(item.id);
-    const equipped = equippedId === item.id;
-    const canAfford = save.coins >= item.price;
-    let btn;
-    if (equipped) {
-      btn = `<button class="item-btn equipped" disabled>Надето</button>`;
-    } else if (owned) {
-      btn = `<button class="item-btn equip" data-action="equip" data-id="${item.id}">Надеть</button>`;
-    } else {
-      btn = `<button class="item-btn buy" data-action="buy" data-id="${item.id}" ${canAfford ? '' : 'disabled'}>${item.price} ₽</button>`;
-    }
-
-    let icon = '';
-    if (currentTab === 'rods') icon = `<svg viewBox="0 0 50 50" width="42" height="42"><line x1="10" y1="42" x2="38" y2="8" stroke="#8B5A2B" stroke-width="3.5" stroke-linecap="round"/><circle cx="38" cy="8" r="3" fill="#5D3A1A"/><path d="M38 10 Q42 22 40 32" stroke="#DDD" stroke-width="1.2" fill="none"/><circle cx="40" cy="34" r="3" fill="#E74C3C"/></svg>`;
-    if (currentTab === 'baits') icon = `<svg viewBox="0 0 50 50" width="42" height="42"><circle cx="25" cy="25" r="13" fill="#8B5A2B"/><circle cx="21" cy="22" r="3" fill="#5D3A1A"/><circle cx="28" cy="28" r="2.5" fill="#5D3A1A"/><circle cx="25" cy="18" r="1.5" fill="#A0704A"/></svg>`;
-    if (currentTab === 'gear') icon = `<svg viewBox="0 0 50 50" width="42" height="42"><rect x="10" y="20" width="30" height="20" rx="3" fill="#7F8C8D" stroke="#566573" stroke-width="1.5"/><path d="M10 20 L18 12 L32 12 L40 20" fill="#95A5A6" stroke="#566573" stroke-width="1.5"/></svg>`;
-
-    return `
-      <div class="shop-item ${owned ? 'owned' : ''}">
-        <div class="item-icon">${icon}</div>
-        <div class="item-info">
-          <div class="item-name">${item.name}</div>
-          <div class="item-desc">${item.desc}</div>
-        </div>
-        ${btn}
-      </div>
-    `;
-  }).join('');
-
-  shopCoinsEl.textContent = save.coins;
-}
-
-shopListEl.addEventListener('click', e => {
-  const btn = e.target.closest('button[data-action]');
-  if (!btn) return;
-  const action = btn.dataset.action;
-  const id = btn.dataset.id;
-  const item = SHOP_ITEMS[currentTab].find(i => i.id === id);
-  if (!item) return;
-
-  if (action === 'buy') {
-    if (save.coins < item.price) { showToast('Недостаточно монет'); return; }
-    save.coins -= item.price;
-    save.owned[currentTab].push(id);
-    save.equipped[currentTab] = id;
-    sounds.coin();
-    showToast(`Куплено: ${item.name}`);
-  } else if (action === 'equip') {
-    save.equipped[currentTab] = id;
-    showToast(`Надето: ${item.name}`);
-  }
-
-  persistSave();
-  renderShop();
-  updateMenu();
-});
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    currentTab = tab.dataset.tab;
-    renderShop();
+  return {
+    x: fisherRect.left - gameRect.left + fisherRect.width * 0.975,
+    y: fisherRect.top - gameRect.top + fisherRect.height * 0.10
   };
-});
+}
 
-// ==================== НАВИГАЦИЯ ====================
-$('playBtn').onclick = () => startGame();
-$('shopBtn').onclick = () => { updateMenu(); renderShop(); showScreen('shopScreen'); };
-$('shopBackBtn').onclick = () => { updateMenu(); showScreen('mainMenu'); };
-$('restartBtn').onclick = () => startGame();
-$('menuBtn').onclick = () => { updateMenu(); showScreen('mainMenu'); };
+function pickLandingPoint() {
+  const gameRect = gameEl.getBoundingClientRect();
+  const rodTip = getRodTip();
+  const minX = rodTip.x + 30;
+  const maxX = gameRect.width - 40;
+  const waterTop = gameRect.height * 0.63;
+  const waterBottom = gameRect.height - 60;
+  return {
+    x: minX + Math.random() * (maxX - minX),
+    y: waterTop + Math.random() * (waterBottom - waterTop)
+  };
+}
 
-// ==================== СТАРТ ====================
-updateMenu();
-updateHUD();
-showScreen('mainMenu');
-</script>
+// ==================== АНИМАЦИЯ ЛЕСКИ ====================
+function drawLine(from, to, sag = 0) {
+  ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+  if (!from || !to) return;
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  const midX = (from.x + to.x) / 2;
+  const midY = (from.y + to.y) / 2 + sag;
+  ctx.quadraticCurveTo(midX, midY, to.x, to.y);
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+}
+
+function clearLineCanvas() {
+  ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+}
+
+// ==================== ИГРОВОЙ ЦИКЛ ====================
+let frameCount = 0;
+function loop() {
+  frameCount++;
+  updateSwimmingFish();
+  if (frameCount % 30 === 0) spawnSwimmingLoop();
+  if (bobberPos && lineStartPos) {
+    const sag = state === 'biting' ? 6 + Math.sin(frameCount * 0.3) * 4 : 8;
+    drawLine(lineStartPos, bobberPos, sag);
+  }
+  animFrame = requestAnimationFrame(loop);
+}
+loop();
+ </script>
 </body>
- </html>
+</html>
