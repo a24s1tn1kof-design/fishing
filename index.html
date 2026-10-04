@@ -26,19 +26,15 @@
     box-shadow: 0 0 40px rgba(0,0,0,0.6);
     transition: background 2s ease;
   }
-
-  /* ===== ПОГОДНЫЕ СЛОИ ===== */
   #sky {
     position: absolute;
     inset: 0;
     z-index: 0;
     transition: background 2s ease;
   }
-  #sky.day    { background: linear-gradient(180deg, #7EC8E3 0%, #A9D9EC 38%, #5DADE2 50%, #1B4F72 100%); }
-  #sky.evening{ background: linear-gradient(180deg, #FDB99B 0%, #CF8BF3 35%, #5B4B8A 60%, #1B1F3A 100%); }
-  #sky.night  { background: linear-gradient(180deg, #0B1A2E 0%, #1B2A4A 40%, #0F1A30 60%, #05080F 100%); }
-
-  /* Луна ночью */
+  #sky.day     { background: linear-gradient(180deg, #7EC8E3 0%, #A9D9EC 38%, #5DADE2 50%, #1B4F72 100%); }
+  #sky.evening { background: linear-gradient(180deg, #FDB99B 0%, #CF8BF3 35%, #5B4B8A 60%, #1B1F3A 100%); }
+  #sky.night   { background: linear-gradient(180deg, #0B1A2E 0%, #1B2A4A 40%, #0F1A30 60%, #05080F 100%); }
   #moon {
     position: absolute;
     top: 30px; right: 40px;
@@ -51,8 +47,6 @@
     z-index: 1;
   }
   #moon.visible { opacity: 1; }
-
-  /* Солнце */
   .sun {
     position: absolute;
     top: 20px; right: 20px;
@@ -64,20 +58,16 @@
   .sun svg { width: 100%; height: 100%; animation: sunPulse 4s ease-in-out infinite; }
   @keyframes sunPulse {
     0%,100% { filter: drop-shadow(0 0 15px #FFD54F); }
-    50% { filter: drop-shadow(0 0 28px #FFEB3B); }
+    50%     { filter: drop-shadow(0 0 28px #FFEB3B); }
   }
-
-  /* Облака */
   .cloud { position: absolute; opacity: 0.9; animation: cloudMove 40s linear infinite; z-index: 2; }
-  .cloud.c1 { top: 50px; left: -100px; width: 90px; animation-duration: 50s; }
+  .cloud.c1 { top: 50px;  left: -100px; width: 90px; animation-duration: 50s; }
   .cloud.c2 { top: 130px; left: -100px; width: 60px; animation-duration: 65s; animation-delay: -20s; }
-  .cloud.c3 { top: 90px; left: -100px; width: 70px; animation-duration: 75s; animation-delay: -40s; }
+  .cloud.c3 { top: 90px;  left: -100px; width: 70px; animation-duration: 75s; animation-delay: -40s; }
   @keyframes cloudMove {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(600px); }
   }
-
-  /* Дождь */
   #rainLayer {
     position: absolute;
     inset: 0;
@@ -95,11 +85,9 @@
     animation: rainFall linear infinite;
   }
   @keyframes rainFall {
-    0% { transform: translateY(-30px); }
+    0%   { transform: translateY(-30px); }
     100% { transform: translateY(110vh); }
   }
-
-  /* БЕРЕГ */
   .shore {
     position: absolute;
     bottom: 38%;
@@ -109,8 +97,6 @@
     border-top: 4px solid #C4A570;
     z-index: 3;
   }
-
-  /* ВОДА */
   .water {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -120,7 +106,6 @@
     overflow: hidden;
     transition: background 2s ease;
   }
-  #sky.night ~ .water { background: linear-gradient(180deg, #142D4C 0%, #08131F 100%); }
   .water::before {
     content: '';
     position: absolute;
@@ -133,11 +118,9 @@
     animation: wave 4s linear infinite;
   }
   @keyframes wave {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(55px); }
   }
-
-  /* РЫБАК */
   .fisher {
     position: absolute;
     bottom: calc(38% + 42px);
@@ -149,18 +132,14 @@
     transition: transform 0.15s;
   }
   .fisher svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35)); }
-  .fisher.casting { transform: translateX(-50%) rotate(-3deg); }
+  .fisher.casting  { transform: translateX(-50%) rotate(-3deg); }
   .fisher.casting2 { transform: translateX(-50%) rotate(5deg); }
-
-  /* КАНВАС ЛЕСКИ */
   #lineCanvas {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 6;
   }
-
-  /* ПОПЛАВОК */
   #bobber {
     position: absolute;
     width: 18px;
@@ -174,10 +153,8 @@
   #bobber.biting svg { animation: bobberBite 0.3s ease-in-out infinite; }
   @keyframes bobberBite {
     0%,100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(8px) rotate(3deg); }
+    50%     { transform: translateY(8px) rotate(3deg); }
   }
-
-  /* РЫБЫ */
   .swimming-fish {
     position: absolute;
     width: 50px;
@@ -191,27 +168,20 @@
   .swimming-fish.active { opacity: 1; }
   .swimming-fish.hooked { animation: fishHooked 0.3s ease-out forwards; }
   @keyframes fishHooked {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.4) rotate(-15deg); }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.4) rotate(-15deg); }
     100% { transform: scale(1) rotate(0); }
   }
-  .swimming-fish.reeling {
-    animation: reel 0.7s ease-out forwards;
-  }
+  .swimming-fish.reeling { animation: reel 0.7s ease-out forwards; }
   @keyframes reel {
-    0% { transform: scale(1) rotate(0); opacity: 1; }
+    0%   { transform: scale(1) rotate(0); opacity: 1; }
     100% { transform: scale(0.6) rotate(-45deg) translateY(-300px); opacity: 0; }
   }
-</style>
-</head>
-<body>
-<div id="game">
- <style>
-  /* HUD */
   #hud {
     position: absolute;
     top: 0; left: 0; right: 0;
     padding: 12px;
+    padding-right: 60px;
     display: flex;
     justify-content: space-between;
     gap: 6px;
@@ -249,8 +219,34 @@
   #weatherIcon svg { width: 18px; height: 18px; }
   #weatherIcon .label { display: none; }
   @media (min-width: 400px) { #weatherIcon .label { display: inline; } }
-
-  /* КНОПКА ДЕЙСТВИЯ */
+  #exitBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(231,76,60,0.85);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    cursor: pointer;
+    z-index: 21;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: transform 0.1s;
+    padding: 0;
+    font-family: inherit;
+  }
+  #exitBtn:active { transform: scale(0.92); }
+  #exitBtn.show { display: flex; }
+  #exitBtn svg { width: 22px; height: 22px; }
+</style>
+</head>
+<body>
+<div id="game">
+ <style>
   #actionBtn {
     position: absolute;
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
@@ -276,15 +272,23 @@
     transform: translateX(-50%) translateY(3px);
     box-shadow: 0 2px 0 #A04000, 0 4px 10px rgba(0,0,0,0.4);
   }
-  #actionBtn:disabled { background: #7F8C8D; box-shadow: 0 5px 0 #566573; cursor: not-allowed; }
+  #actionBtn:disabled {
+    background: #7F8C8D;
+    box-shadow: 0 5px 0 #566573;
+    cursor: not-allowed;
+  }
   #actionBtn.hidden { display: none; }
   #actionBtn.urgent { animation: urgentPulse 0.5s ease-in-out infinite; }
   @keyframes urgentPulse {
-    0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 5px 0 #A04000, 0 8px 20px rgba(255,0,0,0.4); }
-    50% { transform: translateX(-50%) scale(1.05); box-shadow: 0 5px 0 #A04000, 0 8px 30px rgba(255,100,0,0.8); }
+    0%,100% {
+      transform: translateX(-50%) scale(1);
+      box-shadow: 0 5px 0 #A04000, 0 8px 20px rgba(255,0,0,0.4);
+    }
+    50% {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 5px 0 #A04000, 0 8px 30px rgba(255,100,0,0.8);
+    }
   }
-
-  /* УВЕДОМЛЕНИЕ О РЫБЕ */
   #catch {
     position: absolute;
     top: 40%;
@@ -307,10 +311,8 @@
   }
   #catch.show { transform: translate(-50%, -50%) scale(1); }
   #catch svg { width: 42px; height: 32px; }
-  #catch .catch-name { font-size: 15px; color: #2C3E50; }
+  #catch .catch-name   { font-size: 15px; color: #2C3E50; }
   #catch .catch-weight { font-size: 12px; color: #7F8C8D; font-weight: normal; }
-
-  /* ШКАЛА НАТЯЖЕНИЯ */
   #tensionBar {
     position: absolute;
     bottom: calc(95px + env(safe-area-inset-bottom, 0px));
@@ -341,8 +343,6 @@
     display: none;
     box-shadow: inset 0 0 12px rgba(255,255,255,0.5);
   }
-
-  /* ВСПЛЕСК */
   #splash {
     position: absolute;
     pointer-events: none;
@@ -352,11 +352,9 @@
   }
   #splash.active { display: block; animation: splash 0.7s ease-out forwards; }
   @keyframes splash {
-    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+    0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
   }
-
-  /* TOAST */
   .toast {
     position: absolute;
     top: 80px;
@@ -377,8 +375,6 @@
     max-width: 90%;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ДОСТИЖЕНИЕ */
   .achievement-popup {
     position: absolute;
     top: 120px;
@@ -407,10 +403,9 @@
   }
   .achievement-popup svg { width: 32px; height: 32px; flex-shrink: 0; }
   .achievement-popup .ach-title { font-size: 11px; opacity: 0.8; }
-  .achievement-popup .ach-name { font-size: 15px; }
+  .achievement-popup .ach-name  { font-size: 15px; }
  </style>
  <style>
-  /* ЭКРАНЫ */
   .screen {
     position: absolute;
     inset: 0;
@@ -457,9 +452,9 @@
     align-self: center;
   }
   .menu-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
-  .menu-btn.play { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 5px 0 #1E8449; }
-  .menu-btn.shop { background: linear-gradient(180deg, #F39C12, #E67E22); box-shadow: 0 5px 0 #A04000; }
-  .menu-btn.back { background: linear-gradient(180deg, #7F8C8D, #566573); box-shadow: 0 5px 0 #2C3E50; }
+  .menu-btn.play   { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 5px 0 #1E8449; }
+  .menu-btn.shop   { background: linear-gradient(180deg, #F39C12, #E67E22); box-shadow: 0 5px 0 #A04000; }
+  .menu-btn.back   { background: linear-gradient(180deg, #7F8C8D, #566573); box-shadow: 0 5px 0 #2C3E50; }
   .menu-btn.encycl { background: linear-gradient(180deg, #9B59B6, #8E44AD); box-shadow: 0 5px 0 #633974; }
   .menu-btn.achiev { background: linear-gradient(180deg, #3498DB, #2980B9); box-shadow: 0 5px 0 #1A5276; }
   .menu-btn.small {
@@ -469,8 +464,6 @@
     font-size: 13px;
     letter-spacing: 1px;
   }
-
-  /* ШАПКА */
   .header {
     display: flex;
     justify-content: space-between;
@@ -491,8 +484,6 @@
     gap: 5px;
   }
   .coins svg { width: 20px; height: 20px; }
-
-  /* ТАБЫ */
   .tabs {
     display: flex;
     gap: 4px;
@@ -520,8 +511,6 @@
     opacity: 1;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
-
-  /* СПИСКИ */
   .list {
     display: flex;
     flex-direction: column;
@@ -538,9 +527,8 @@
     gap: 10px;
     transition: all 0.2s;
   }
-  .list-item.owned { border-color: #FFD700; background: rgba(255,215,0,0.08); }
+  .list-item.owned  { border-color: #FFD700; background: rgba(255,215,0,0.08); }
   .list-item.locked { opacity: 0.45; filter: grayscale(0.7); }
-
   .item-icon {
     width: 46px; height: 46px;
     flex-shrink: 0;
@@ -552,7 +540,14 @@
   }
   .item-icon svg { width: 38px; height: 38px; }
   .item-info { flex: 1; min-width: 0; }
-  .item-name { font-weight: bold; font-size: 14px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+  .item-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
   .item-desc { font-size: 11px; opacity: 0.7; line-height: 1.3; }
   .item-btn {
     padding: 7px 12px;
@@ -567,13 +562,11 @@
     transition: transform 0.1s;
     flex-shrink: 0;
   }
-  .item-btn.buy { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 3px 0 #1E8449; }
-  .item-btn.equip { background: linear-gradient(180deg, #3498DB, #2980B9); box-shadow: 0 3px 0 #1A5276; }
-  .item-btn.equipped { background: #566573; cursor: default; box-shadow: none; }
+  .item-btn.buy     { background: linear-gradient(180deg, #2ECC71, #27AE60); box-shadow: 0 3px 0 #1E8449; }
+  .item-btn.equip   { background: linear-gradient(180deg, #3498DB, #2980B9); box-shadow: 0 3px 0 #1A5276; }
+  .item-btn.equipped{ background: #566573; cursor: default; box-shadow: none; }
   .item-btn:active:not(.equipped) { transform: translateY(2px); }
   .item-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* РЕДКОСТЬ */
   .rarity-common    { color: #95A5A6; }
   .rarity-uncommon  { color: #2ECC71; }
   .rarity-rare      { color: #3498DB; }
@@ -589,8 +582,6 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-
-  /* ГЕЙМ ОВЕР */
   .stat-row {
     display: flex;
     justify-content: space-between;
@@ -601,8 +592,6 @@
     font-size: 14px;
   }
   .stat-row span:last-child { font-weight: bold; color: #FFD700; }
-
-  /* ИЗНОС УДОЧКИ */
   .durability-bar {
     height: 6px;
     background: rgba(0,0,0,0.4);
@@ -623,7 +612,6 @@
   <div id="sky" class="day"></div>
   <div id="moon"></div>
 
-  <!-- СОЛНЦЕ -->
   <div class="sun" id="sunEl">
     <svg viewBox="0 0 100 100">
       <circle cx="50" cy="50" r="24" fill="#FFD54F"/>
@@ -641,7 +629,6 @@
     </svg>
   </div>
 
-  <!-- ОБЛАКА -->
   <div class="cloud c1">
     <svg viewBox="0 0 100 40">
       <ellipse cx="30" cy="25" rx="25" ry="14" fill="#fff"/>
@@ -667,10 +654,8 @@
   <div class="water"></div>
   <div class="shore"></div>
 
-  <!-- ДОЖДЬ -->
   <div id="rainLayer"></div>
 
-  <!-- РЫБАК -->
   <div class="fisher" id="fisher">
     <svg viewBox="0 0 80 100">
       <ellipse cx="40" cy="96" rx="22" ry="4" fill="rgba(0,0,0,0.3)"/>
@@ -702,7 +687,6 @@
 
   <canvas id="lineCanvas"></canvas>
 
-  <!-- HUD -->
   <div id="hud">
     <div class="hud-item">
       <svg viewBox="0 0 40 30">
@@ -719,21 +703,19 @@
       </svg>
       <span id="coinsText">0</span>
     </div>
-    <div class="hud-item">
-      <svg viewBox="0 0 30 30">
-        <circle cx="15" cy="15" r="11" fill="none" stroke="#fff" stroke-width="2.5"/>
-        <line x1="15" y1="15" x2="15" y2="9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="15" y1="15" x2="20" y2="17" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      </svg>
-      <span id="timeText">60</span>
-    </div>
     <div id="weatherIcon">
       <svg id="weatherSvg" viewBox="0 0 24 24"></svg>
       <span class="label" id="weatherLabel">Ясно</span>
     </div>
   </div>
 
-  <!-- ПОПЛАВОК -->
+  <button id="exitBtn" title="Завершить">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+      <line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18"/>
+    </svg>
+  </button>
+
   <div id="bobber">
     <svg viewBox="0 0 18 40">
       <line x1="9" y1="0" x2="9" y2="10" stroke="#FFEB3B" stroke-width="2.5"/>
@@ -744,7 +726,6 @@
     </svg>
   </div>
 
-  <!-- ВСПЛЕСК -->
   <div id="splash">
     <svg viewBox="0 0 100 60" width="110">
       <ellipse cx="50" cy="45" rx="42" ry="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.9"/>
@@ -755,7 +736,6 @@
     </svg>
   </div>
 
-  <!-- ШКАЛА НАТЯЖЕНИЯ -->
   <div id="tensionBar">
     <div id="perfectZone"></div>
     <div id="tensionFill"></div>
@@ -765,10 +745,9 @@
   <div id="catch"></div>
   <div class="toast" id="toast"></div>
   <div class="achievement-popup" id="achPopup"></div>
-    <!-- ГЛАВНОЕ МЕНЮ -->
-  <div class="screen show" id="mainMenu">
+    <div class="screen show" id="mainMenu">
     <div class="screen-title">РЫБАЛКА</div>
-    <div class="screen-sub">Поймай как можно больше рыбы за 60 секунд</div>
+    <div class="screen-sub">Лови рыбу сколько хочешь — пока удочка держится</div>
     <div class="coins" style="align-self:center;margin-bottom:20px;">
       <svg viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="9" fill="#FFD700" stroke="#B8860B" stroke-width="1.5"/>
@@ -782,11 +761,10 @@
     <button class="menu-btn achiev" id="achievBtn">Достижения</button>
     <div style="flex:1"></div>
     <div style="text-align:center;opacity:0.5;font-size:13px;">
-      Рекорд: <span id="menuBest">0</span> рыб
+      Рекорд: <span id="menuBest">0</span> очков
     </div>
   </div>
 
-  <!-- МАГАЗИН -->
   <div class="screen" id="shopScreen">
     <div class="header">
       <button class="menu-btn back small" id="shopBackBtn">Назад</button>
@@ -806,7 +784,6 @@
     <div class="list" id="shopList"></div>
   </div>
 
-  <!-- ЭНЦИКЛОПЕДИЯ -->
   <div class="screen" id="encyclScreen">
     <div class="header">
       <button class="menu-btn back small" id="encyclBackBtn">Назад</button>
@@ -815,14 +792,13 @@
           <circle cx="12" cy="12" r="9" fill="#9B59B6" stroke="#633974" stroke-width="1.5"/>
           <text x="12" y="17" font-size="12" font-weight="bold" fill="#FFF" text-anchor="middle" font-family="Arial">?</text>
         </svg>
-        <span id="encyclCount">0/6</span>
+        <span id="encyclCount">0/7</span>
       </div>
     </div>
     <div class="screen-title" style="font-size:24px;margin:8px 0;">Энциклопедия</div>
     <div class="list" id="encyclList"></div>
   </div>
 
-  <!-- ДОСТИЖЕНИЯ -->
   <div class="screen" id="achievScreen">
     <div class="header">
       <button class="menu-btn back small" id="achievBackBtn">Назад</button>
@@ -837,14 +813,13 @@
     <div class="list" id="achievList"></div>
   </div>
 
-  <!-- КОНЕЦ ИГРЫ -->
   <div class="screen" id="gameover">
-    <div class="screen-title" style="color:#E74C3C;text-shadow:0 3px 0 #922B21;">Время вышло</div>
+    <div class="screen-title" style="color:#E74C3C;text-shadow:0 3px 0 #922B21;">Рыбалка окончена</div>
     <div style="font-size:18px;text-align:center;margin-bottom:14px;">
       Поймано рыб: <b id="finalScore" style="color:#FFD700;font-size:26px;">0</b>
     </div>
     <div style="font-size:15px;text-align:center;margin-bottom:16px;color:#FFD700;font-weight:bold;" id="rewardLine"></div>
-    <div class="stat-row"><span>Очков</span><span id="statPoints">0</span></div>
+    <div class="stat-row"><span>Очков за сессию</span><span id="statPoints">0</span></div>
     <div class="stat-row"><span>Упущено</span><span id="statMissed">0</span></div>
     <div class="stat-row"><span>Ботинков</span><span id="statBoots">0</span></div>
     <div class="stat-row"><span>Самый крупный улов</span><span id="statBiggest">—</span></div>
@@ -853,8 +828,8 @@
     <button class="menu-btn play" id="restartBtn">Играть снова</button>
     <button class="menu-btn back" id="menuBtn">В меню</button>
   </div>
-         </div>
-         <script>
+</div>
+<script>
 // ==================== SVG ИКОНКИ РЫБ ====================
 function fishSVG(type, size = 60) {
   const svgs = {
@@ -863,15 +838,15 @@ function fishSVG(type, size = 60) {
     ruffe: `<svg viewBox="0 0 60 44" width="${size}"><path d="M5 22 Q22 8 42 22 Q22 36 5 22 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/><path d="M42 22 L56 12 L56 32 Z" fill="#8D6E63" stroke="#3E2723" stroke-width="1.5"/><path d="M12 8 L16 14 M20 6 L23 13 M28 6 L30 13 M36 8 L37 14" stroke="#3E2723" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="14" cy="19" r="2.5" fill="#FFEB3B"/><circle cx="14" cy="19" r="1.3" fill="#000"/></svg>`,
     pike: `<svg viewBox="0 0 70 44" width="${size}"><path d="M5 22 Q25 6 50 20 L58 18 L54 22 L58 26 L50 24 Q25 38 5 22 Z" fill="#558B2F" stroke="#1B5E20" stroke-width="1.5"/><path d="M50 20 L68 10 L66 22 L68 34 L50 24 Z" fill="#33691E" stroke="#1B5E20" stroke-width="1.5"/><path d="M15 18 L18 26 M22 15 L25 29 M29 14 L32 30" stroke="#1B5E20" stroke-width="1.2" fill="none"/><circle cx="13" cy="19" r="3" fill="#F44336"/><circle cx="13" cy="19" r="1.5" fill="#000"/></svg>`,
     catfish: `<svg viewBox="0 0 80 50" width="${size + 10}"><path d="M8 25 Q30 5 55 25 Q30 45 8 25 Z" fill="#455A64" stroke="#1A237E" stroke-width="1.8"/><path d="M55 25 L74 12 L74 38 Z" fill="#37474F" stroke="#1A237E" stroke-width="1.8"/><circle cx="18" cy="22" r="3.2" fill="#FFF"/><circle cx="18" cy="22" r="1.7" fill="#000"/><path d="M8 25 Q2 22 -2 24 M8 25 Q2 28 -2 26" stroke="#1A237E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    sturgeon: `<svg viewBox="0 0 80 44" width="${size + 10}"><path d="M5 22 Q25 10 55 22 Q25 34 5 22 Z" fill="#8D9E5C" stroke="#4A5C2A" stroke-width="1.5"/><path d="M55 22 L75 14 L73 22 L75 30 L55 22 Z" fill="#6B7A45" stroke="#4A5C2A" stroke-width="1.5"/><path d="M15 10 L18 4 M22 9 L25 4 M30 8 L33 3 M38 8 L41 3" stroke="#4A5C2A" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="14" cy="20" r="2.8" fill="#FFF"/><circle cx="14" cy="20" r="1.5" fill="#000"/></svg>`,
     boot: `<svg viewBox="0 0 60 50" width="${size}"><path d="M15 8 L15 30 Q15 38 8 40 L55 40 Q52 34 45 32 L40 30 L40 8 Z" fill="#5D4037" stroke="#3E2723" stroke-width="2"/><path d="M15 8 L40 8" stroke="#3E2723" stroke-width="2"/><path d="M15 35 L55 35" stroke="#3E2723" stroke-width="1.5"/></svg>`
   };
   return svgs[type] || svgs.perch;
 }
 
-// Иконки погоды
 function weatherSVG(type) {
   const svgs = {
-    clear: `<circle cx="12" cy="12" r="5" fill="#FFD54F"/><g stroke="#FFD54F" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></g>`,
+    clear: `<circle cx="12" cy="12" r="5" fill="#FFD54F"/><g stroke="#FFD54F" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="5" y1="5" x2="7" y2="7"/><line x1="17" y1="17" x2="19" y2="19"/><line x1="19" y1="5" x2="17" y2="7"/><line x1="7" y1="17" x2="5" y2="19"/></g>`,
     cloudy: `<path d="M7 18 Q3 18 3 14 Q3 11 6 11 Q7 7 11 7 Q14 7 15 10 Q19 10 19 14 Q19 18 15 18 Z" fill="#B0BEC5"/>`,
     rain: `<path d="M7 15 Q3 15 3 12 Q3 9 6 9 Q7 5 11 5 Q14 5 15 8 Q19 8 19 12 Q19 15 15 15 Z" fill="#78909C"/><line x1="8" y1="18" x2="7" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="18" x2="11" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="18" x2="15" y2="21" stroke="#4FC3F7" stroke-width="2" stroke-linecap="round"/>`,
     storm: `<path d="M7 15 Q3 15 3 12 Q3 9 6 9 Q7 5 11 5 Q14 5 15 8 Q19 8 19 12 Q19 15 15 15 Z" fill="#546E7A"/><path d="M13 16 L10 20 L12 20 L10 24 L14 20 L12 20 Z" fill="#FFEB3B"/>`
@@ -926,72 +901,73 @@ function playNoise(duration, volume = 0.1, filterFreq = 1000) {
 }
 
 const sounds = {
-  cast:       () => playTone(600, 0.25, 'sine', 0.1, 150),
-  splash:     () => playNoise(0.4, 0.15, 800),
-  biteSoft:   () => { playTone(500, 0.08, 'sine', 0.08); setTimeout(() => playTone(600, 0.08, 'sine', 0.08), 80); },
-  biteSharp:  () => { playTone(900, 0.06, 'square', 0.12); setTimeout(() => playTone(1100, 0.06, 'square', 0.12), 60); },
-  biteFalse:  () => playTone(300, 0.15, 'sawtooth', 0.08, 200),
-  hook:       () => playTone(400, 0.15, 'triangle', 0.2, 900),
-  catch:      () => { playTone(523, 0.1, 'sine', 0.15); setTimeout(() => playTone(659, 0.1, 'sine', 0.15), 100); setTimeout(() => playTone(784, 0.2, 'sine', 0.15), 200); },
-  bigCatch:   () => { playTone(523, 0.12, 'sine', 0.18); setTimeout(() => playTone(659, 0.12, 'sine', 0.18), 120); setTimeout(() => playTone(784, 0.12, 'sine', 0.18), 240); setTimeout(() => playTone(1046, 0.3, 'sine', 0.2), 360); },
-  miss:       () => playTone(300, 0.3, 'sawtooth', 0.1, 100),
-  reel:       () => playTone(200, 0.4, 'sawtooth', 0.08, 500),
-  rodBreak:   () => { playNoise(0.3, 0.25, 2000); playTone(200, 0.4, 'sawtooth', 0.15, 60); },
-  coin:       () => { playTone(1200, 0.08, 'sine', 0.15); setTimeout(() => playTone(1600, 0.12, 'sine', 0.15), 80); },
-  achievement:() => { playTone(784, 0.15, 'sine', 0.2); setTimeout(() => playTone(1046, 0.15, 'sine', 0.2), 150); setTimeout(() => playTone(1318, 0.35, 'sine', 0.2), 300); },
-  gameover:   () => { playTone(400, 0.2, 'sine', 0.15); setTimeout(() => playTone(300, 0.2, 'sine', 0.15), 200); setTimeout(() => playTone(200, 0.4, 'sine', 0.15), 400); },
-  thunder:    () => { playNoise(1.2, 0.3, 300); }
+  cast:        () => playTone(600, 0.25, 'sine', 0.1, 150),
+  splash:      () => playNoise(0.4, 0.15, 800),
+  biteSoft:    () => { playTone(500, 0.08, 'sine', 0.08); setTimeout(() => playTone(600, 0.08, 'sine', 0.08), 80); },
+  biteSharp:   () => { playTone(900, 0.06, 'square', 0.12); setTimeout(() => playTone(1100, 0.06, 'square', 0.12), 60); },
+  biteFalse:   () => playTone(300, 0.15, 'sawtooth', 0.08, 200),
+  hook:        () => playTone(400, 0.15, 'triangle', 0.2, 900),
+  catch:       () => { playTone(523, 0.1, 'sine', 0.15); setTimeout(() => playTone(659, 0.1, 'sine', 0.15), 100); setTimeout(() => playTone(784, 0.2, 'sine', 0.15), 200); },
+  bigCatch:    () => { playTone(523, 0.12, 'sine', 0.18); setTimeout(() => playTone(659, 0.12, 'sine', 0.18), 120); setTimeout(() => playTone(784, 0.12, 'sine', 0.18), 240); setTimeout(() => playTone(1046, 0.3, 'sine', 0.2), 360); },
+  miss:        () => playTone(300, 0.3, 'sawtooth', 0.1, 100),
+  reel:        () => playTone(200, 0.4, 'sawtooth', 0.08, 500),
+  rodBreak:    () => { playNoise(0.3, 0.25, 2000); playTone(200, 0.4, 'sawtooth', 0.15, 60); },
+  coin:        () => { playTone(1200, 0.08, 'sine', 0.15); setTimeout(() => playTone(1600, 0.12, 'sine', 0.15), 80); },
+  achievement: () => { playTone(784, 0.15, 'sine', 0.2); setTimeout(() => playTone(1046, 0.15, 'sine', 0.2), 150); setTimeout(() => playTone(1318, 0.35, 'sine', 0.2), 300); },
+  gameover:    () => { playTone(400, 0.2, 'sine', 0.15); setTimeout(() => playTone(300, 0.2, 'sine', 0.15), 200); setTimeout(() => playTone(200, 0.4, 'sine', 0.15), 400); },
+  thunder:     () => playNoise(1.2, 0.3, 300)
 };
-
+</script>
+<script>
 // ==================== БАЗА РЫБ ====================
 const BASE_FISH = [
-  { key: 'perch',   name: 'Окунь',         points: 1,  chance: 40, difficulty: 1,   biteMin: 2000, biteMax: 4000, rarity: 'common',    minKg: 0.1,  maxKg: 0.8,  nightBonus: 0.5, rainBonus: 0.3,  pricePerKg: 15 },
-  { key: 'carp',    name: 'Карась',        points: 2,  chance: 25, difficulty: 1.5, biteMin: 2200, biteMax: 4200, rarity: 'common',    minKg: 0.3,  maxKg: 1.5,  nightBonus: 0.8, rainBonus: 0.5,  pricePerKg: 20 },
-  { key: 'ruffe',   name: 'Ёрш',           points: 3,  chance: 15, difficulty: 2,   biteMin: 2400, biteMax: 4500, rarity: 'uncommon',  minKg: 0.05, maxKg: 0.3,  nightBonus: 1.2, rainBonus: 0.8,  pricePerKg: 25 },
-  { key: 'pike',    name: 'Щука',          points: 5,  chance: 12, difficulty: 2.5, biteMin: 2600, biteMax: 4800, rarity: 'rare',      minKg: 1,    maxKg: 8,    nightBonus: 0.6, rainBonus: 1.0,  pricePerKg: 40 },
-  { key: 'catfish', name: 'Сом-гигант',    points: 10, chance: 5,  difficulty: 3,   biteMin: 3000, biteMax: 5500, rarity: 'epic',      minKg: 5,    maxKg: 30,   nightBonus: 1.5, rainBonus: 1.2,  pricePerKg: 60 },
-  { key: 'sturgeon',name: 'Осётр',         points: 20, chance: 2,  difficulty: 4,   biteMin: 3500, biteMax: 6000, rarity: 'legendary', minKg: 10,   maxKg: 50,   nightBonus: 0.8, rainBonus: 1.5,  pricePerKg: 120 },
-  { key: 'boot',    name: 'Старый ботинок',points: 0,  chance: 3,  difficulty: 1,   biteMin: 1500, biteMax: 3000, rarity: 'common',    minKg: 0.3,  maxKg: 0.6,  nightBonus: 1,   rainBonus: 1,    pricePerKg: 1 }
+  { key: 'perch',    name: 'Окунь',          points: 1,  chance: 40, difficulty: 1,   biteMin: 2000, biteMax: 4000, rarity: 'common',    minKg: 0.1,  maxKg: 0.8,  nightBonus: 0.5, rainBonus: 0.3, pricePerKg: 15 },
+  { key: 'carp',     name: 'Карась',         points: 2,  chance: 25, difficulty: 1.5, biteMin: 2200, biteMax: 4200, rarity: 'common',    minKg: 0.3,  maxKg: 1.5,  nightBonus: 0.8, rainBonus: 0.5, pricePerKg: 20 },
+  { key: 'ruffe',    name: 'Ёрш',            points: 3,  chance: 15, difficulty: 2,   biteMin: 2400, biteMax: 4500, rarity: 'uncommon',  minKg: 0.05, maxKg: 0.3,  nightBonus: 1.2, rainBonus: 0.8, pricePerKg: 25 },
+  { key: 'pike',     name: 'Щука',           points: 5,  chance: 12, difficulty: 2.5, biteMin: 2600, biteMax: 4800, rarity: 'rare',      minKg: 1,    maxKg: 8,    nightBonus: 0.6, rainBonus: 1.0, pricePerKg: 40 },
+  { key: 'catfish',  name: 'Сом-гигант',     points: 10, chance: 5,  difficulty: 3,   biteMin: 3000, biteMax: 5500, rarity: 'epic',      minKg: 5,    maxKg: 30,   nightBonus: 1.5, rainBonus: 1.2, pricePerKg: 60 },
+  { key: 'sturgeon', name: 'Осётр',          points: 20, chance: 2,  difficulty: 4,   biteMin: 3500, biteMax: 6000, rarity: 'legendary', minKg: 10,   maxKg: 50,   nightBonus: 0.8, rainBonus: 1.5, pricePerKg: 120 },
+  { key: 'boot',     name: 'Старый ботинок', points: 0,  chance: 3,  difficulty: 1,   biteMin: 1500, biteMax: 3000, rarity: 'common',    minKg: 0.3,  maxKg: 0.6,  nightBonus: 1,   rainBonus: 1,   pricePerKg: 1 }
 ];
 
 // ==================== МАГАЗИН ====================
 const SHOP_ITEMS = {
   rods: [
-    { id: 'rod_basic',   name: 'Бамбуковая',    desc: 'Простая. Прочность 100%',   price: 0,    bonus: 0,    maxWeight: 5,  durability: 100 },
-    { id: 'rod_fiber',   name: 'Стеклопластик', desc: 'Держит до 10 кг. +15% монет', price: 100,  bonus: 0.15, maxWeight: 10, durability: 100 },
-    { id: 'rod_carbon',  name: 'Карбоновая',    desc: 'Держит до 25 кг. +35% монет', price: 350,  bonus: 0.35, maxWeight: 25, durability: 100 },
-    { id: 'rod_gold',    name: 'Золотая удочка',desc: 'Держит всё. +70% монет',     price: 1000, bonus: 0.70, maxWeight: 100,durability: 100 }
+    { id: 'rod_basic',  name: 'Бамбуковая',     desc: 'Простая. До 5 кг. 100% прочность',  price: 0,    bonus: 0,    maxWeight: 5,   durability: 100 },
+    { id: 'rod_fiber',  name: 'Стеклопластик',  desc: 'До 10 кг. +15% монет',              price: 100,  bonus: 0.15, maxWeight: 10,  durability: 100 },
+    { id: 'rod_carbon', name: 'Карбоновая',     desc: 'До 25 кг. +35% монет',              price: 350,  bonus: 0.35, maxWeight: 25,  durability: 100 },
+    { id: 'rod_gold',   name: 'Золотая удочка', desc: 'Держит всё. +70% монет',            price: 1000, bonus: 0.70, maxWeight: 100, durability: 100 }
   ],
   baits: [
-    { id: 'bait_worm',   name: 'Червь',            desc: 'Обычная наживка',        price: 0,   effect: 'none',     value: 0 },
-    { id: 'bait_maggot', name: 'Опарыш',           desc: 'Мелочь клюёт чаще',      price: 80,  effect: 'small',    value: 0.3 },
-    { id: 'bait_lure',   name: 'Блесна',           desc: 'Хищник клюёт чаще',      price: 250, effect: 'predator', value: 0.3 },
-    { id: 'bait_golden', name: 'Золотая приманка', desc: 'Редкая рыба! +50% очков',price: 600, effect: 'rare',     value: 0.5 }
+    { id: 'bait_worm',   name: 'Червь',            desc: 'Обычная наживка',          price: 0,   effect: 'none',     value: 0 },
+    { id: 'bait_maggot', name: 'Опарыш',           desc: 'Мелочь клюёт чаще',        price: 80,  effect: 'small',    value: 0.3 },
+    { id: 'bait_lure',   name: 'Блесна',           desc: 'Хищник клюёт чаще',        price: 250, effect: 'predator', value: 0.3 },
+    { id: 'bait_golden', name: 'Золотая приманка', desc: 'Редкая рыба! +50% очков',  price: 600, effect: 'rare',     value: 0.5 }
   ],
   gear: [
-    { id: 'gear_none',   name: 'Без снастей', desc: 'Обычное время игры',      price: 0,   bonus: 0 },
-    { id: 'gear_basket', name: 'Сак',         desc: '+15 секунд к таймеру',    price: 150, bonus: 15 },
-    { id: 'gear_sonar',  name: 'Эхолот',      desc: 'Шире зона подсечки',      price: 400, bonus: 0.5 },
-    { id: 'gear_both',   name: 'Полный набор',desc: '+20 сек и широкая зона',  price: 900, bonus: 'both' }
+    { id: 'gear_none',   name: 'Без снастей',    desc: 'Обычная рыбалка',                     price: 0,   bonus: 0 },
+    { id: 'gear_scale',  name: 'Мерная линейка', desc: 'Показывает вес рыбы при поклёвке',    price: 150, bonus: 'scale' },
+    { id: 'gear_sonar',  name: 'Эхолот',         desc: 'Шире зона подсечки',                  price: 400, bonus: 0.5 },
+    { id: 'gear_both',   name: 'Полный набор',   desc: 'Эхолот + мерная линейка',             price: 900, bonus: 'both' }
   ]
 };
 
 // ==================== ДОСТИЖЕНИЯ ====================
 const ACHIEVEMENTS = [
-  { id: 'first',      name: 'Первая рыбка',       desc: 'Поймай свою первую рыбу',           check: s => s.totalCaught >= 1 },
-  { id: 'ten',        name: 'Рыбак-новичок',      desc: 'Поймай 10 рыб всего',               check: s => s.totalCaught >= 10 },
-  { id: 'hundred',    name: 'Опытный рыбак',      desc: 'Поймай 100 рыб всего',              check: s => s.totalCaught >= 100 },
-  { id: 'catfish',    name: 'Сомовья охота',      desc: 'Поймай сома',                       check: s => s.caught.catfish >= 1 },
-  { id: 'sturgeon',   name: 'Царская рыба',       desc: 'Поймай осетра',                     check: s => s.caught.sturgeon >= 1 },
-  { id: 'big',        name: 'Крупная рыба',       desc: 'Поймай рыбу весом 10 кг+',          check: s => s.biggest >= 10 },
-  { id: 'rich',       name: 'Богач',              desc: 'Накопи 1000 монет',                 check: s => save.coins >= 1000 },
-  { id: 'record',     name: 'Рекордсмен',         desc: 'Набери 100+ очков за игру',         check: s => save.best >= 100 },
-  { id: 'night',      name: 'Ночной охотник',     desc: 'Поймай 5 рыб ночью за раз',         check: s => s.nightCatches >= 5 },
-  { id: 'perfect',    name: 'Снайпер',            desc: 'Поймай 10 рыб без промаха за раз',  check: s => s.perfectStreak >= 10 }
+  { id: 'first',   name: 'Первая рыбка',      desc: 'Поймай свою первую рыбу',          check: s => s.totalCaught >= 1 },
+  { id: 'ten',     name: 'Рыбак-новичок',     desc: 'Поймай 10 рыб всего',              check: s => s.totalCaught >= 10 },
+  { id: 'hundred', name: 'Опытный рыбак',     desc: 'Поймай 100 рыб всего',             check: s => s.totalCaught >= 100 },
+  { id: 'catfish', name: 'Сомовья охота',     desc: 'Поймай сома',                      check: s => (s.caught.catfish || 0) >= 1 },
+  { id: 'sturgeon',name: 'Царская рыба',      desc: 'Поймай осетра',                    check: s => (s.caught.sturgeon || 0) >= 1 },
+  { id: 'big',     name: 'Крупная рыба',      desc: 'Поймай рыбу весом 10 кг+',         check: s => s.biggest >= 10 },
+  { id: 'rich',    name: 'Богач',             desc: 'Накопи 1000 монет',                check: s => save.coins >= 1000 },
+  { id: 'record',  name: 'Рекордсмен',        desc: 'Набери 100+ очков за игру',        check: s => save.best >= 100 },
+  { id: 'night',   name: 'Ночной охотник',    desc: 'Поймай 5 рыб ночью за раз',        check: s => s.nightCatches >= 5 },
+  { id: 'perfect', name: 'Снайпер',           desc: 'Поймай 10 рыб без промаха за раз', check: s => s.perfectStreak >= 10 }
 ];
 
 // ==================== СОХРАНЕНИЕ ====================
-const SAVE_KEY = 'fishing_save_v4';
+const SAVE_KEY = 'fishing_save_v5';
 
 function defaultSave() {
   return {
@@ -1011,7 +987,13 @@ function loadSave() {
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
     const d = defaultSave();
-    return { ...d, ...s, owned: { ...d.owned, ...(s.owned || {}) }, equipped: { ...d.equipped, ...(s.equipped || {}) }, durability: { ...d.durability, ...(s.durability || {}) } };
+    return {
+      ...d,
+      ...s,
+      owned: { ...d.owned, ...(s.owned || {}) },
+      equipped: { ...d.equipped, ...(s.equipped || {}) },
+      durability: { ...d.durability, ...(s.durability || {}) }
+    };
   } catch(e) { return defaultSave(); }
 }
 
@@ -1020,8 +1002,7 @@ let save = loadSave();
 function persistSave() {
   localStorage.setItem(SAVE_KEY, JSON.stringify(save));
 }
- </script>
- <script>
+
 // ==================== DOM ====================
 const $ = id => document.getElementById(id);
 const gameEl = $('game');
@@ -1034,7 +1015,6 @@ const fisherEl = $('fisher');
 const lineCanvas = $('lineCanvas');
 const ctx = lineCanvas.getContext('2d');
 const scoreTextEl = $('scoreText');
-const timeTextEl = $('timeText');
 const coinsTextEl = $('coinsText');
 const weatherSvg = $('weatherSvg');
 const weatherLabel = $('weatherLabel');
@@ -1046,12 +1026,12 @@ const splashEl = $('splash');
 const toastEl = $('toast');
 const achPopupEl = $('achPopup');
 const rainLayer = $('rainLayer');
-
+const exitBtn = $('exitBtn');
+</script>
+<script>
 // ==================== СОСТОЯНИЕ ====================
 let state = 'idle';
 let score = 0;
-let timeLeft = 60;
-let timerInterval = null;
 let biteTimeout = null;
 let currentFish = null;
 let currentFishWeight = 0;
@@ -1065,7 +1045,8 @@ let lineStartPos = null;
 let bobberPos = null;
 let weather = { type: 'clear', label: 'Ясно' };
 let dayPhase = 'day';
-let sessionStats = { points: 0, missed: 0, boots: 0, biggest: 0, nightCatches: 0, perfectStreak: 0 };
+let sessionStats = { points: 0, caught: 0, missed: 0, boots: 0, biggest: 0, nightCatches: 0, perfectStreak: 0 };
+let gameRunning = false;
 
 // ==================== КАНВАС ====================
 function resizeCanvas() {
@@ -1077,10 +1058,13 @@ resizeCanvas();
 
 // ==================== ХЕЛПЕРЫ ====================
 function getEquipped() {
+  const rods = SHOP_ITEMS.rods || [];
+  const baits = SHOP_ITEMS.baits || [];
+  const gear = SHOP_ITEMS.gear || [];
   return {
-    rod:  SHOP_ITEMS.rods.find(r => r.id === save.equipped.rods) || SHOP_ITEMS.rods[0],
-    bait: SHOP_ITEMS.baits.find(b => b.id === save.equipped.baits) || SHOP_ITEMS.baits[0],
-    gear: SHOP_ITEMS.gears ? SHOP_ITEMS.gears.find(g => g.id === save.equipped.gears) : SHOP_ITEMS.gear.find(g => g.id === save.equipped.gear) || SHOP_ITEMS.gear[0]
+    rod:  rods.find(r => r.id === save.equipped.rods) || rods[0],
+    bait: baits.find(b => b.id === save.equipped.baits) || baits[0],
+    gear: gear.find(g => g.id === save.equipped.gear) || gear[0]
   };
 }
 
@@ -1094,7 +1078,6 @@ function setRodDurability(val) {
 
 function updateHUD() {
   scoreTextEl.textContent = score;
-  timeTextEl.textContent = timeLeft;
   coinsTextEl.textContent = save.coins;
 }
 
@@ -1119,10 +1102,10 @@ function showScreen(id) {
 // ==================== ВРЕМЯ СУТОК И ПОГОДА ====================
 function pickWeather() {
   const r = Math.random();
-  if (r < 0.5) { weather = { type: 'clear', label: 'Ясно' }; }
-  else if (r < 0.75) { weather = { type: 'cloudy', label: 'Облачно' }; }
-  else if (r < 0.93) { weather = { type: 'rain', label: 'Дождь' }; }
-  else { weather = { type: 'storm', label: 'Гроза' }; }
+  if (r < 0.5) weather = { type: 'clear', label: 'Ясно' };
+  else if (r < 0.75) weather = { type: 'cloudy', label: 'Облачно' };
+  else if (r < 0.93) weather = { type: 'rain', label: 'Дождь' };
+  else weather = { type: 'storm', label: 'Гроза' };
   weatherSvg.innerHTML = weatherSVG(weather.type);
   weatherLabel.textContent = weather.label;
   updateRainEffect();
@@ -1181,10 +1164,10 @@ function pickFish() {
     let w = f.chance;
     if (weather.type === 'rain' || weather.type === 'storm') w *= 1 + (f.rainBonus || 0);
     if (dayPhase === 'night') w *= 1 + (f.nightBonus || 0);
-    if (bait.effect === 'small' && (f.key === 'perch' || f.key === 'carp' || f.key === 'ruffe')) w *= 1 + bait.value;
-    if (bait.effect === 'predator' && (f.key === 'pike' || f.key === 'catfish' || f.key === 'sturgeon')) w *= 1 + bait.value;
-    if (bait.effect === 'rare' && f.points >= 3 && f.key !== 'boot') w *= 1 + bait.value;
-    if (f.key === 'boot' && bait.effect === 'rare') w *= 0.3;
+    if (bait && bait.effect === 'small' && (f.key === 'perch' || f.key === 'carp' || f.key === 'ruffe')) w *= 1 + bait.value;
+    if (bait && bait.effect === 'predator' && (f.key === 'pike' || f.key === 'catfish' || f.key === 'sturgeon')) w *= 1 + bait.value;
+    if (bait && bait.effect === 'rare' && f.points >= 3 && f.key !== 'boot') w *= 1 + bait.value;
+    if (f.key === 'boot' && bait && bait.effect === 'rare') w *= 0.3;
     return { ...f, w };
   });
   const total = weighted.reduce((s, f) => s + f.w, 0);
@@ -1207,7 +1190,7 @@ const MAX_SWIMMING = 6;
 
 function createSwimmingFish() {
   const gameRect = gameEl.getBoundingClientRect();
-  const waterTop = gameRect.height * 0.62;
+  const waterTop = gameRect.height * 0.64;
   const waterBottom = gameRect.height - 20;
   const el = document.createElement('div');
   el.className = 'swimming-fish';
@@ -1221,15 +1204,7 @@ function createSwimmingFish() {
   gameEl.appendChild(el);
   const dir = Math.random() < 0.5 ? 1 : -1;
   const speed = 0.15 + Math.random() * 0.35;
-  const obj = {
-    el,
-    x, y,
-    dir,
-    speed,
-    targetX: dir > 0 ? gameRect.width + 60 : -60,
-    alive: true,
-    key: fish.key
-  };
+  const obj = { el, x, y, dir, speed, alive: true, key: fish.key };
   el.style.transform = `scaleX(${dir})`;
   swimmingFish.push(obj);
   setTimeout(() => el.classList.add('active'), 50);
@@ -1261,11 +1236,14 @@ function spawnSwimmingLoop() {
 }
 
 function clearAllSwimming() {
-  swimmingFish.forEach(f => f.alive = false);
+  swimmingFish.forEach(f => {
+    f.alive = false;
+    if (f.el.parentNode) f.el.parentNode.removeChild(f.el);
+  });
   swimmingFish = [];
 }
 
-// ==================== ДУГА ЗАБРОСА ====================
+// ==================== ЛЕСКА ====================
 function getRodTip() {
   const gameRect = gameEl.getBoundingClientRect();
   const fisherRect = fisherEl.getBoundingClientRect();
@@ -1280,7 +1258,7 @@ function pickLandingPoint() {
   const rodTip = getRodTip();
   const minX = rodTip.x + 30;
   const maxX = gameRect.width - 40;
-  const waterTop = gameRect.height * 0.63;
+  const waterTop = gameRect.height * 0.65;
   const waterBottom = gameRect.height - 60;
   return {
     x: minX + Math.random() * (maxX - minX),
@@ -1288,7 +1266,6 @@ function pickLandingPoint() {
   };
 }
 
-// ==================== АНИМАЦИЯ ЛЕСКИ ====================
 function drawLine(from, to, sag = 0) {
   ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
   if (!from || !to) return;
@@ -1310,8 +1287,10 @@ function clearLineCanvas() {
 let frameCount = 0;
 function loop() {
   frameCount++;
-  updateSwimmingFish();
-  if (frameCount % 30 === 0) spawnSwimmingLoop();
+  if (gameRunning) {
+    updateSwimmingFish();
+    if (frameCount % 30 === 0) spawnSwimmingLoop();
+  }
   if (bobberPos && lineStartPos) {
     const sag = state === 'biting' ? 6 + Math.sin(frameCount * 0.3) * 4 : 8;
     drawLine(lineStartPos, bobberPos, sag);
@@ -1320,5 +1299,556 @@ function loop() {
 }
 loop();
  </script>
+ <script>
+// ==================== СТАРТ / СТОП ====================
+function startGame() {
+  score = 0;
+  sessionStats = { points: 0, caught: 0, missed: 0, boots: 0, biggest: 0, nightCatches: 0, perfectStreak: 0 };
+  gameRunning = true;
+
+  pickWeather();
+  pickTimeOfDay();
+  clearAllSwimming();
+  for (let i = 0; i < 3; i++) createSwimmingFish();
+
+  updateHUD();
+  showScreen(null);
+  actionBtn.classList.remove('hidden');
+  exitBtn.classList.add('show');
+  resetRod();
+}
+
+function resetRod() {
+  state = 'idle';
+  actionBtn.disabled = false;
+  actionBtn.classList.remove('urgent');
+  actionBtn.textContent = 'Забросить';
+  bobberEl.style.display = 'none';
+  bobberEl.classList.remove('biting');
+  bobberPos = null;
+  lineStartPos = null;
+  clearLineCanvas();
+  currentFish = null;
+}
+
+function cast() {
+  if (state !== 'idle' || !gameRunning) return;
+  state = 'casting';
+  actionBtn.disabled = true;
+  initAudio();
+  sounds.cast();
+  fisherEl.classList.add('casting2');
+  setTimeout(() => fisherEl.classList.remove('casting2'), 250);
+
+  const rodTip = getRodTip();
+  const landing = pickLandingPoint();
+  lineStartPos = { x: rodTip.x, y: rodTip.y };
+
+  const duration = 400;
+  const start = performance.now();
+  const startPos = { x: rodTip.x, y: rodTip.y };
+
+  bobberEl.style.display = 'block';
+  bobberEl.style.left = landing.x + 'px';
+  bobberEl.style.top = startPos.y + 'px';
+  bobberEl.style.opacity = '0.5';
+
+  function animateFly(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const x = startPos.x + (landing.x - startPos.x) * t;
+    const arcY = startPos.y + (landing.y - startPos.y) * t - Math.sin(t * Math.PI) * 80;
+    bobberEl.style.left = x + 'px';
+    bobberEl.style.top = arcY + 'px';
+    bobberPos = { x, y: arcY };
+    if (t < 1) requestAnimationFrame(animateFly);
+    else {
+      bobberEl.style.opacity = '1';
+      bobberPos = { x: landing.x, y: landing.y };
+      sounds.splash();
+      showSplash(landing.x, landing.y);
+      state = 'waiting';
+      actionBtn.textContent = 'Ждём...';
+      scheduleBite();
+    }
+  }
+  requestAnimationFrame(animateFly);
+}
+
+// ==================== ТИПЫ ПОКЛЁВОК ====================
+function scheduleBite() {
+  const wait = 1000 + Math.random() * 3500;
+  biteTimeout = setTimeout(() => {
+    if (state !== 'waiting') return;
+    startBite();
+  }, wait);
+}
+
+function startBite() {
+  if (state !== 'waiting') return;
+  state = 'biting';
+  currentFish = pickFish();
+  currentFishWeight = parseFloat(rollWeight(currentFish));
+
+  const r = Math.random();
+  let biteType;
+  if (currentFish.key === 'boot') biteType = 'false';
+  else if (r < 0.2) biteType = 'false';
+  else if (r < 0.7) biteType = 'soft';
+  else biteType = 'sharp';
+
+  if (biteType === 'false') {
+    sounds.biteFalse();
+    bobberEl.classList.add('biting');
+    actionBtn.textContent = 'ПОДСЕЧКА!';
+    actionBtn.disabled = false;
+    actionBtn.classList.add('urgent');
+    setTimeout(() => {
+      if (state === 'biting') {
+        bobberEl.classList.remove('biting');
+        actionBtn.classList.remove('urgent');
+        state = 'idle';
+        actionBtn.disabled = false;
+        actionBtn.textContent = 'Забросить';
+        bobberEl.style.display = 'none';
+        bobberPos = null;
+        clearLineCanvas();
+        showToast('Пустая поклёвка!');
+      }
+    }, 700);
+    return;
+  }
+
+  if (biteType === 'soft') {
+    sounds.biteSoft();
+    actionBtn.textContent = 'Подсекай';
+    actionBtn.classList.remove('urgent');
+  } else {
+    sounds.biteSharp();
+    actionBtn.textContent = 'ПОДСЕЧКА!';
+    actionBtn.classList.add('urgent');
+  }
+  actionBtn.disabled = false;
+  bobberEl.classList.add('biting');
+
+  const matching = swimmingFish.filter(f => f.key === currentFish.key && f.alive);
+  if (matching.length > 0) matching[0].el.classList.add('hooked');
+
+  // Показать вес, если куплена линейка
+  const gear = getEquipped().gear;
+  if (gear && (gear.bonus === 'scale' || gear.bonus === 'both')) {
+    showToast(`Клюёт ${currentFish.name}, вес ~${currentFishWeight} кг`);
+  }
+
+  const biteWindow = currentFish.biteMin + Math.random() * (currentFish.biteMax - currentFish.biteMin);
+  biteTimeout = setTimeout(() => {
+    if (state === 'biting') {
+      bobberEl.classList.remove('biting');
+      actionBtn.classList.remove('urgent');
+      sessionStats.missed++;
+      state = 'idle';
+      actionBtn.disabled = false;
+      actionBtn.textContent = 'Забросить';
+      bobberEl.style.display = 'none';
+      bobberPos = null;
+      clearLineCanvas();
+      showCatch('Упустил!', currentFish.key, '#E74C3C');
+    }
+  }, biteWindow);
+}
+
+// ==================== ПОДСЕЧКА ====================
+function hook() {
+  if (state !== 'biting') return;
+  state = 'fighting';
+  actionBtn.disabled = true;
+  actionBtn.classList.remove('urgent');
+  actionBtn.textContent = 'Тяни!';
+  clearTimeout(biteTimeout);
+  bobberEl.classList.remove('biting');
+  sounds.hook();
+  if (bobberPos) showSplash(bobberPos.x, bobberPos.y);
+
+  tension = 0;
+  tensionDirection = 1;
+  const gear = getEquipped().gear;
+  let zoneWidth = 16 - currentFish.difficulty * 2.5;
+  if (gear && (gear.bonus === 0.5 || gear.bonus === 'both')) zoneWidth *= 1.5;
+  perfectZone = { start: 50 - zoneWidth, end: 50 + zoneWidth };
+
+  tensionBar.style.display = 'block';
+  tensionFill.style.width = '0%';
+  perfectZoneEl.style.display = 'block';
+  perfectZoneEl.style.left = perfectZone.start + '%';
+  perfectZoneEl.style.width = (perfectZone.end - perfectZone.start) + '%';
+
+  const speed = 0.9 + currentFish.difficulty * 0.7;
+  tensionInterval = setInterval(() => {
+    tension += tensionDirection * speed;
+    if (tension >= 100) { tension = 100; tensionDirection = -1; }
+    if (tension <= 0) { tension = 0; tensionDirection = 1; }
+    tensionFill.style.width = tension + '%';
+  }, 20);
+
+  actionBtn.textContent = 'СТОП!';
+  actionBtn.disabled = false;
+  actionBtn.onclick = releaseTension;
+}
+
+// ==================== ВЫВАЖИВАНИЕ И ИЗНОС ====================
+function releaseTension() {
+  if (state !== 'fighting') return;
+  clearInterval(tensionInterval);
+  tensionBar.style.display = 'none';
+  perfectZoneEl.style.display = 'none';
+  actionBtn.onclick = mainAction;
+
+  const inZone = tension >= perfectZone.start && tension <= perfectZone.end;
+  const isBoot = currentFish.key === 'boot';
+  const rod = getEquipped().rod;
+  const durability = getRodDurability();
+
+  const tooHeavy = currentFishWeight > rod.maxWeight;
+  const willBreak = tooHeavy || (currentFishWeight > rod.maxWeight * 0.7 && durability < 40);
+
+  if (inZone) {
+    if (willBreak && !isBoot) {
+      sounds.rodBreak();
+      setRodDurability(0);
+      persistSave();
+      showCatch('Удочка сломалась!', currentFish.key, '#E74C3C');
+      showToast(`Слишком тяжёлая рыба (${currentFishWeight} кг) для ${rod.name}`);
+      setTimeout(() => { endGame(true); }, 1500);
+      return;
+    }
+
+    if (isBoot) {
+      sessionStats.boots++;
+      showCatch(`${currentFish.name}`, currentFish.key, '#E74C3C');
+      sounds.miss();
+      setRodDurability(durability - 2);
+      persistSave();
+      sessionStats.perfectStreak = 0;
+    } else {
+      let points = currentFish.points;
+      const bait = getEquipped().bait;
+      if (bait && bait.effect === 'rare') points = Math.ceil(points * (1 + bait.value));
+      score += points;
+      sessionStats.points += points;
+      sessionStats.caught++;
+
+      if (currentFishWeight > sessionStats.biggest) sessionStats.biggest = currentFishWeight;
+      if (currentFishWeight > save.biggest) save.biggest = currentFishWeight;
+
+      save.caught[currentFish.key] = (save.caught[currentFish.key] || 0) + 1;
+      save.totalCaught = (save.totalCaught || 0) + 1;
+      if (dayPhase === 'night') sessionStats.nightCatches++;
+      sessionStats.perfectStreak++;
+
+      const wear = Math.min(15, Math.max(1, Math.round(currentFishWeight * 0.8)));
+      setRodDurability(durability - wear);
+
+      if (currentFishWeight > rod.maxWeight * 0.6) sounds.bigCatch();
+      else sounds.catch();
+
+      showCatchFish(currentFish, currentFishWeight, points);
+      animateReel();
+      checkAchievements(sessionStats);
+    }
+  } else {
+    sessionStats.missed++;
+    sessionStats.perfectStreak = 0;
+    showCatch('Сорвалась!', currentFish.key, '#E74C3C');
+    sounds.miss();
+    setRodDurability(durability - 1);
+  }
+
+  persistSave();
+  updateHUD();
+  setTimeout(resetRod, 700);
+}
+ </script>
+ <script>
+function animateReel() {
+  const matching = swimmingFish.filter(f => f.key === currentFish.key && f.alive);
+  if (matching.length > 0) {
+    matching[0].el.classList.add('reeling');
+    setTimeout(() => removeSwimmingFish(matching[0]), 800);
+  }
+  sounds.reel();
+}
+
+function showSplash(x, y) {
+  splashEl.style.left = x + 'px';
+  splashEl.style.top = y + 'px';
+  splashEl.classList.add('active');
+  setTimeout(() => splashEl.classList.remove('active'), 700);
+}
+
+function showCatch(text, fishKey, color) {
+  catchEl.innerHTML = fishSVG(fishKey, 40) + `<div><div>${text}</div></div>`;
+  catchEl.style.color = color || '#E67E22';
+  catchEl.classList.add('show');
+  setTimeout(() => catchEl.classList.remove('show'), 1000);
+}
+
+function showCatchFish(fish, weight, points) {
+  const rarityClass = 'rarity-' + fish.rarity;
+  catchEl.innerHTML = `
+    ${fishSVG(fish.key, 40)}
+    <div style="text-align:center">
+      <div style="font-size:16px">+${points} ${fish.name}</div>
+      <div class="catch-weight ${rarityClass}">${weight} кг · ${fish.rarity}</div>
+    </div>`;
+  catchEl.style.color = '#27AE60';
+  catchEl.classList.add('show');
+  setTimeout(() => catchEl.classList.remove('show'), 1200);
+}
+
+function checkAchievements(stats) {
+  const ctxData = {
+    totalCaught: save.totalCaught,
+    caught: save.caught,
+    biggest: save.biggest,
+    nightCatches: stats.nightCatches,
+    perfectStreak: stats.perfectStreak
+  };
+  for (const a of ACHIEVEMENTS) {
+    if (save.unlockedAch.includes(a.id)) continue;
+    let ok = false;
+    try { ok = a.check(ctxData); } catch(e) { ok = false; }
+    if (ok) {
+      save.unlockedAch.push(a.id);
+      persistSave();
+      showAchievement(a);
+    }
+  }
+}
+
+function showAchievement(a) {
+  sounds.achievement();
+  achPopupEl.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="#FFF" stroke="#8B6914" stroke-width="1.5">
+      <path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z"/>
+    </svg>
+    <div>
+      <div class="ach-title">ДОСТИЖЕНИЕ</div>
+      <div class="ach-name">${a.name}</div>
+    </div>`;
+  achPopupEl.classList.add('show');
+  setTimeout(() => achPopupEl.classList.remove('show'), 3000);
+}
+
+function endGame(broken) {
+  if (!gameRunning) return;
+  gameRunning = false;
+  state = 'idle';
+  clearTimeout(biteTimeout);
+  clearInterval(tensionInterval);
+  tensionBar.style.display = 'none';
+  perfectZoneEl.style.display = 'none';
+  bobberEl.style.display = 'none';
+  actionBtn.classList.add('hidden');
+  actionBtn.classList.remove('urgent');
+  exitBtn.classList.remove('show');
+  bobberPos = null;
+  lineStartPos = null;
+  clearLineCanvas();
+  clearAllSwimming();
+  sounds.gameover();
+
+  const rod = getEquipped().rod;
+  const multiplier = 1 + (rod && rod.bonus ? rod.bonus : 0);
+  const coinsEarned = Math.max(0, Math.round(score * 5 * multiplier));
+  save.coins += coinsEarned;
+
+  const isRecord = score > save.best;
+  if (isRecord) save.best = score;
+  persistSave();
+
+  $('finalScore').textContent = sessionStats.caught;
+  $('rewardLine').textContent = broken
+    ? `Удочка сломалась! +${coinsEarned} монет`
+    : `+${coinsEarned} монет${isRecord && score > 0 ? ' • Новый рекорд!' : ''}`;
+  $('statPoints').textContent = sessionStats.points;
+  $('statMissed').textContent = sessionStats.missed;
+  $('statBoots').textContent = sessionStats.boots;
+  $('statBiggest').textContent = sessionStats.biggest > 0 ? sessionStats.biggest + ' кг' : '—';
+  $('statBest').textContent = save.best;
+
+  if (coinsEarned > 0) setTimeout(() => sounds.coin(), 400);
+
+  showScreen('gameover');
+  updateMenu();
+}
+
+function mainAction() {
+  if (state === 'idle') cast();
+  else if (state === 'biting') hook();
+}
+
+actionBtn.onclick = mainAction;
+exitBtn.addEventListener('click', () => endGame(false));
+
+// ==================== НАВИГАЦИЯ ====================
+document.getElementById('playBtn').addEventListener('click', () => startGame());
+document.getElementById('shopBtn').addEventListener('click', () => {
+  updateMenu();
+  renderShop();
+  showScreen('shopScreen');
+});
+document.getElementById('shopBackBtn').addEventListener('click', () => {
+  updateMenu();
+  showScreen('mainMenu');
+});
+document.getElementById('restartBtn').addEventListener('click', () => startGame());
+document.getElementById('menuBtn').addEventListener('click', () => {
+  updateMenu();
+  showScreen('mainMenu');
+});
+document.getElementById('encyclBtn').addEventListener('click', () => {
+  renderEncycl();
+  showScreen('encyclScreen');
+});
+document.getElementById('encyclBackBtn').addEventListener('click', () => {
+  updateMenu();
+  showScreen('mainMenu');
+});
+document.getElementById('achievBtn').addEventListener('click', () => {
+  renderAchiev();
+  showScreen('achievScreen');
+});
+document.getElementById('achievBackBtn').addEventListener('click', () => {
+  updateMenu();
+  showScreen('mainMenu');
+});
+
+// ==================== МАГАЗИН ====================
+let currentTab = 'rods';
+
+function renderShop() {
+  const items = SHOP_ITEMS[currentTab];
+  const ownedIds = save.owned[currentTab] || [];
+  const equippedId = save.equipped[currentTab];
+
+  document.getElementById('shopList').innerHTML = items.map(item => {
+    const owned = ownedIds.includes(item.id);
+    const equipped = equippedId === item.id;
+    const canAfford = save.coins >= item.price;
+    let btn;
+    if (equipped) btn = `<button class="item-btn equipped" disabled>Надето</button>`;
+    else if (owned) btn = `<button class="item-btn equip" data-action="equip" data-id="${item.id}">Надеть</button>`;
+    else btn = `<button class="item-btn buy" data-action="buy" data-id="${item.id}" ${canAfford ? '' : 'disabled'}>${item.price} ₽</button>`;
+
+    let icon = '';
+    if (currentTab === 'rods') icon = `<svg viewBox="0 0 50 50" width="38" height="38"><line x1="10" y1="42" x2="38" y2="8" stroke="#8B5A2B" stroke-width="3.5" stroke-linecap="round"/><circle cx="38" cy="8" r="3" fill="#5D3A1A"/><path d="M38 10 Q42 22 40 32" stroke="#DDD" stroke-width="1.2" fill="none"/><circle cx="40" cy="34" r="3" fill="#E74C3C"/></svg>`;
+    if (currentTab === 'baits') icon = `<svg viewBox="0 0 50 50" width="38" height="38"><circle cx="25" cy="25" r="13" fill="#8B5A2B"/><circle cx="21" cy="22" r="3" fill="#5D3A1A"/><circle cx="28" cy="28" r="2.5" fill="#5D3A1A"/></svg>`;
+    if (currentTab === 'gear') icon = `<svg viewBox="0 0 50 50" width="38" height="38"><rect x="10" y="20" width="30" height="20" rx="3" fill="#7F8C8D" stroke="#566573" stroke-width="1.5"/><path d="M10 20 L18 12 L32 12 L40 20" fill="#95A5A6" stroke="#566573" stroke-width="1.5"/></svg>`;
+
+    let durabilityHTML = '';
+    if (currentTab === 'rods' && item.durability) {
+      const dur = save.durability[item.id] ?? 100;
+      durabilityHTML = `<div class="durability-bar"><div class="durability-fill ${dur < 40 ? 'warning' : ''}" style="width:${dur}%"></div></div>`;
+    }
+
+    return `
+      <div class="list-item ${owned ? 'owned' : ''}">
+        <div class="item-icon">${icon}</div>
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+          ${durabilityHTML}
+        </div>
+        ${btn}
+      </div>`;
+  }).join('');
+
+  document.getElementById('shopCoins').textContent = save.coins;
+}
+
+document.getElementById('shopList').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+  const item = SHOP_ITEMS[currentTab].find(i => i.id === id);
+  if (!item) return;
+
+  if (action === 'buy') {
+    if (save.coins < item.price) { showToast('Недостаточно монет'); return; }
+    save.coins -= item.price;
+    save.owned[currentTab].push(id);
+    save.equipped[currentTab] = id;
+    if (currentTab === 'rods') save.durability[id] = 100;
+    sounds.coin();
+    showToast(`Куплено: ${item.name}`);
+  } else if (action === 'equip') {
+    save.equipped[currentTab] = id;
+    showToast(`Надето: ${item.name}`);
+  }
+  persistSave();
+  renderShop();
+  updateMenu();
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    renderShop();
+  });
+});
+
+// ==================== ЭНЦИКЛОПЕДИЯ ====================
+function renderEncycl() {
+  const total = BASE_FISH.filter(f => f.key !== 'boot').length;
+  let caughtCount = 0;
+  document.getElementById('encyclList').innerHTML = BASE_FISH.map(f => {
+    const caught = save.caught[f.key] || 0;
+    if (caught > 0 && f.key !== 'boot') caughtCount++;
+    return `
+      <div class="list-item ${caught > 0 ? '' : 'locked'}">
+        <div class="item-icon">${fishSVG(f.key, 38)}</div>
+        <div class="item-info">
+          <div class="item-name">${f.name} <span class="rarity-badge ${'rarity-' + f.rarity}">${f.rarity}</span></div>
+          <div class="item-desc">Вес: ${f.minKg}–${f.maxKg} кг · Очков: ${f.points}</div>
+          <div class="item-desc">Поймано: ${caught > 0 ? caught + ' раз' : '???'}</div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('encyclCount').textContent = `${caughtCount}/${total}`;
+}
+
+// ==================== ДОСТИЖЕНИЯ ЭКРАН ====================
+function renderAchiev() {
+  document.getElementById('achievList').innerHTML = ACHIEVEMENTS.map(a => {
+    const unlocked = save.unlockedAch.includes(a.id);
+    return `
+      <div class="list-item ${unlocked ? 'owned' : 'locked'}">
+        <div class="item-icon" style="background:${unlocked ? 'rgba(255,215,0,0.2)' : 'rgba(0,0,0,0.3)'}">
+          <svg viewBox="0 0 24 24" fill="${unlocked ? '#FFD700' : '#7F8C8D'}">
+            <path d="M12 2 L15 9 L22 9 L16 14 L18 21 L12 17 L6 21 L8 14 L2 9 L9 9 Z"/>
+          </svg>
+        </div>
+        <div class="item-info">
+          <div class="item-name">${a.name}</div>
+          <div class="item-desc">${a.desc}</div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('achievCount').textContent = `${save.unlockedAch.length}/${ACHIEVEMENTS.length}`;
+}
+
+// ==================== СТАРТ ====================
+updateMenu();
+updateHUD();
+pickWeather();
+applyTimeOfDay();
+showScreen('mainMenu');
+
+window.addEventListener('beforeunload', () => {
+  if (animFrame) cancelAnimationFrame(animFrame);
+});
+</script>
 </body>
 </html>
